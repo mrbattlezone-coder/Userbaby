@@ -1,0 +1,2666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<!-- CRITICAL: Improved viewport scaling for absolute mobile precision -->
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<title>FF.PANEL | PREMIUM</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- FontAwesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+
+<!-- 🔥 ZAPUPI PAYMENT GATEWAY SCRIPT 🔥 -->
+<script src="https://zapupi.com/single-html-web-kit.js"></script>
+
+<style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --bg-color: #050508;
+            --card-bg: rgba(15, 18, 25, 0.6);
+            --card-border: rgba(0, 240, 255, 0.15);
+            --neon-cyan: #00f0ff;
+            --neon-cyan-dim: rgba(0, 240, 255, 0.4);
+            --neon-purple: #bc13fe;
+            --neon-crypto: #F3BA2F;
+            --neon-crypto-dim: rgba(243, 186, 47, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #a0a5b5;
+            --error: #ff2a5f;
+            --success: #00ff66;
+            --warning: #ffb800;
+            --wa-color: #25D366;
+            --tg-color: #0088cc;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%; max-width: 100vw; overflow-x: hidden;
+            background-color: var(--bg-color); color: var(--text-main);
+            min-height: 100vh; min-height: 100dvh;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(188, 19, 254, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(0, 240, 255, 0.05), transparent 25%);
+        }
+
+        /* --- UTILITIES & GLASSMORPHISM --- */
+        .hidden { display: none !important; }
+        
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+        }
+        
+        /* --- BUTTONS --- */
+        .btn {
+            background: transparent; color: var(--neon-cyan); border: 1px solid var(--neon-cyan);
+            padding: 12px 20px; border-radius: 10px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); width: 100%;
+            display: inline-flex; justify-content: center; align-items: center; gap: 8px;
+            text-transform: uppercase; letter-spacing: 1px; font-size: 13px; text-decoration: none;
+            height: 48px;
+        }
+        .btn:hover:not(:disabled) {
+            background: rgba(0, 240, 255, 0.1); box-shadow: 0 0 15px var(--neon-cyan-dim);
+            transform: translateY(-2px);
+        }
+        .btn-primary { background: var(--neon-cyan); color: #000; font-weight: 800; }
+        .btn-primary:hover:not(:disabled) { background: #fff; border-color: #fff; box-shadow: 0 0 20px var(--neon-cyan); }
+        
+        .btn-purchase {
+            background: linear-gradient(90deg, var(--neon-purple), #0073ff);
+            border: none; color: white; font-size: 14px; font-weight: 800;
+            padding: 12px 15px; border-radius: 12px; letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+        }
+        .btn-purchase:hover:not(:disabled) {
+            background: linear-gradient(90deg, #0073ff, var(--neon-purple));
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6); transform: translateY(-2px);
+        }
+
+        .btn-crypto {
+            background: linear-gradient(90deg, #F3BA2F, #f8d12f);
+            border: none; color: #000; font-size: 14px; font-weight: 800;
+            box-shadow: 0 0 15px rgba(243, 186, 47, 0.4);
+        }
+        .btn-crypto:hover:not(:disabled) {
+            background: linear-gradient(90deg, #f8d12f, #F3BA2F);
+            box-shadow: 0 0 25px rgba(243, 186, 47, 0.6); transform: translateY(-2px);
+        }
+
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; filter: grayscale(1); }
+
+        /* --- INPUTS --- */
+        .input-group { margin-bottom: 18px; width: 100%; position: relative; }
+        .input-group input {
+            width: 100%; max-width: 100%; padding: 0 18px; height: 50px; background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white;
+            outline: none; transition: 0.3s; font-size: 14px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .input-group input:focus { border-color: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan-dim), inset 0 2px 4px rgba(0,0,0,0.3); }
+
+        /* --- LOADER & TOAST --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 8, 0.95); z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            backdrop-filter: blur(10px);
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 4px solid rgba(0, 240, 255, 0.1);
+            border-top-color: var(--neon-cyan); border-radius: 50%; animation: spin 1s linear infinite;
+            box-shadow: 0 0 20px var(--neon-cyan-dim);
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        #toast-container { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); z-index: 10000; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; }
+        .toast {
+            padding: 14px 20px; border-radius: 12px; color: white; font-weight: 600; font-size: 13px;
+            background: var(--card-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);
+            border-left: 4px solid var(--neon-cyan); animation: slideUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); display: flex; align-items: center; gap: 12px;
+        }
+        .toast.success { border-left-color: var(--success); box-shadow: 0 10px 30px rgba(0, 255, 102, 0.2); }
+        .toast.error { border-left-color: var(--error); box-shadow: 0 10px 30px rgba(255, 42, 95, 0.2); }
+        .toast.warning { border-left-color: var(--warning); box-shadow: 0 10px 30px rgba(255, 184, 0, 0.2); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        /* --- AUTH SCREEN --- */
+        #auth-screen { min-height: 100vh; min-height: 100dvh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .auth-card { width: 100%; max-width: 420px; padding: 40px 30px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.8); border-top: 2px solid var(--neon-cyan); margin: auto; }
+        .auth-card h1 { color: #fff; margin-bottom: 5px; font-weight: 800; letter-spacing: 3px; text-shadow: 0 0 10px var(--neon-cyan-dim); }
+        .auth-card h1 span { color: var(--neon-cyan); }
+        .auth-card p { color: var(--text-muted); margin-bottom: 30px; font-size: 14px; }
+        .auth-toggle { margin-top: 20px; color: var(--text-muted); font-size: 14px; }
+        .auth-toggle span { color: var(--neon-cyan); cursor: pointer; font-weight: 700; transition: 0.3s; }
+        .auth-toggle span:hover { text-shadow: 0 0 15px var(--neon-cyan); }
+        
+        .contact-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 25px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); }
+        .contact-buttons .btn { flex: 1; min-width: 140px; }
+        .btn-wa { border-color: var(--wa-color); color: var(--wa-color); }
+        .btn-wa:hover { background: var(--wa-color); color: #fff; box-shadow: 0 0 15px rgba(37, 211, 102, 0.5); }
+        .btn-tg { border-color: var(--tg-color); color: var(--tg-color); }
+        .btn-tg:hover { background: var(--tg-color); color: #fff; box-shadow: 0 0 15px rgba(0, 136, 204, 0.5); }
+
+        /* --- NAVBAR --- */
+        #main-app { display: none; width: 100%; }
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 75px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 25px; z-index: 1000; border-bottom: 1px solid rgba(255,255,255,0.05);
+            border-radius: 0 0 20px 20px; background: rgba(10, 12, 18, 0.85);
+            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+        }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 24px; color: white; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,240,255,0.3); }
+        .logo span { color: var(--neon-cyan); }
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .balance-badge {
+            background: rgba(0, 240, 255, 0.1); border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan); padding: 8px 18px; border-radius: 30px;
+            font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;
+            box-shadow: 0 0 10px var(--neon-cyan-dim);
+        }
+        .reseller-nav-badge { background: rgba(188, 19, 254, 0.1); border-color: var(--neon-purple); color: var(--neon-purple); box-shadow: 0 0 10px rgba(188, 19, 254, 0.3); display: none; }
+        .menu-btn { background: none; border: none; color: white; font-size: 24px; cursor: pointer; transition: 0.3s; }
+        .menu-btn:hover { color: var(--neon-cyan); text-shadow: 0 0 10px var(--neon-cyan); }
+
+        /* DROPDOWN */
+        .dropdown {
+            position: absolute; top: 85px; right: 25px; width: 220px;
+            border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+            transform-origin: top right; transform: scale(0.9); opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.9);
+            z-index: 1000;
+        }
+        .dropdown.active { transform: scale(1); opacity: 1; visibility: visible; }
+        .dropdown-item {
+            padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer; display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 500; transition: 0.3s;
+        }
+        .dropdown-item:hover { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); padding-left: 25px; }
+
+        /* --- PAGES CONTENT --- */
+        .page-content { padding: 100px 20px 80px 20px; max-width: 1200px; margin: 0 auto; min-height: 100vh; animation: fadeIn 0.5s ease; transition: padding 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .page-title { font-size: 26px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 15px rgba(255,255,255,0.2); }
+        .page-title span { color: var(--neon-purple); }
+        
+        /* --- DASHBOARD SPECIFIC STYLES --- */
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 35px; }
+        .dash-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; position: relative; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); transition: transform 0.3s ease; }
+        .dash-card:hover { transform: translateY(-5px); }
+        .dash-card::before { content: ''; position: absolute; left: 0; top: 0; width: 4px; height: 100%; }
+        .dash-card.cyan::before { background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); }
+        .dash-card.purple::before { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+        .dash-card.success::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
+        .dash-card.warning::before { background: var(--warning); box-shadow: 0 0 15px var(--warning); }
+        .dash-icon { width: 55px; height: 55px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 24px; margin-bottom: 15px; }
+        .dash-val { font-size: 28px; font-weight: 800; color: white; letter-spacing: 1px; }
+        .dash-label { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-top: 5px; }
+
+        .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 35px; }
+        @media(max-width: 768px) { .quick-actions { grid-template-columns: repeat(2, 1fr); } }
+        .action-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08); padding: 20px 15px; border-radius: 16px; text-align: center; cursor: pointer; transition: 0.3s; color: white; font-weight: 600; font-size: 14px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .action-btn i { font-size: 28px; }
+        .action-btn:hover { background: rgba(255,255,255,0.05); transform: translateY(-5px); }
+        .action-btn.c1:hover { border-color: var(--neon-cyan); box-shadow: 0 5px 20px rgba(0,240,255,0.15); }
+        .action-btn.c1 i { color: var(--neon-cyan); }
+        .action-btn.c2:hover { border-color: var(--neon-purple); box-shadow: 0 5px 20px rgba(188,19,254,0.15); }
+        .action-btn.c2 i { color: var(--neon-purple); }
+        .action-btn.c3:hover { border-color: var(--success); box-shadow: 0 5px 20px rgba(0,255,102,0.15); }
+        .action-btn.c3 i { color: var(--success); }
+        .action-btn.c4:hover { border-color: var(--warning); box-shadow: 0 5px 20px rgba(255,184,0,0.15); }
+        .action-btn.c4 i { color: var(--warning); }
+
+        .dash-section-title { font-size: 20px; font-weight: 700; color: white; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .dash-section-title i { color: var(--neon-purple); }
+        
+        .dash-table-wrapper { background: linear-gradient(145deg, rgba(20, 24, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); overflow-x: auto; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .dash-table { width: 100%; min-width: 650px; border-collapse: collapse; }
+        .dash-table th { text-align: left; padding: 18px 20px; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05); background: rgba(0,0,0,0.2); }
+        .dash-table td { padding: 15px 20px; font-size: 14px; color: white; border-bottom: 1px solid rgba(255,255,255,0.05); font-weight: 500; }
+        .dash-table tr:last-child td { border-bottom: none; }
+        .dash-table tr:hover td { background: rgba(255,255,255,0.03); }
+        .rank-badge { background: rgba(0,240,255,0.1); color: var(--neon-cyan); padding: 4px 10px; border-radius: 8px; font-size: 12px; font-weight: 800; border: 1px solid rgba(0,240,255,0.2); }
+        .rank-1 { background: rgba(255,215,0,0.15); color: #ffd700; border-color: rgba(255,215,0,0.4); text-shadow: 0 0 5px rgba(255,215,0,0.5); }
+        .rank-2 { background: rgba(192,192,192,0.15); color: #c0c0c0; border-color: rgba(192,192,192,0.4); }
+        .rank-3 { background: rgba(205,127,50,0.15); color: #cd7f32; border-color: rgba(205,127,50,0.4); }
+
+        /* SEARCH BAR */
+        .search-container { position: relative; flex: 1; min-width: 280px; max-width: 450px; }
+        .search-container input { padding-left: 45px; border-radius: 30px; margin-bottom: 0; background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); }
+        .search-container i.fa-search { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 16px; transition: 0.3s; }
+        .search-container input:focus { border-color: var(--neon-purple); box-shadow: 0 0 15px rgba(188, 19, 254, 0.3); }
+        .search-container input:focus + i { color: var(--neon-purple); }
+        .search-loader { position: absolute; right: 18px; top: 50%; transform: translateY(-50%); color: var(--neon-purple); display: none; animation: spin 1s linear infinite; }
+
+        /* --- PROMOTION SLIDER --- */
+        .promo-slider { 
+            display: flex; overflow-x: auto; gap: 15px; padding-bottom: 10px; 
+            margin-bottom: 30px; scroll-snap-type: x mandatory; scroll-behavior: smooth; 
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .promo-slider::-webkit-scrollbar { display: none; }
+        .promo-card { flex: 0 0 85%; max-width: 500px; height: 180px; position: relative; border-radius: 16px; overflow: hidden; scroll-snap-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+        @media (min-width: 768px) { .promo-card { flex: 0 0 45%; } }
+        .promo-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+        .promo-card:hover img { transform: scale(1.05); }
+        .promo-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px 15px 15px; background: linear-gradient(transparent, rgba(0,0,0,0.95)); }
+        .promo-title { color: white; font-weight: 700; font-size: 16px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: 0.5px; }
+
+        /* --- PREMIUM PANEL CARDS --- */
+        .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .panel-card { 
+            background: linear-gradient(145deg, rgba(20, 24, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%);
+            border: 1px solid rgba(0, 240, 255, 0.15); border-radius: 20px; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); position: relative;
+        }
+        .panel-card:hover { 
+            transform: translateY(-8px); border-color: rgba(188, 19, 254, 0.5);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.15), 0 0 20px rgba(188, 19, 254, 0.2); 
+            z-index: 10;
+        }
+        
+        .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-bottom: 2px solid rgba(255,255,255,0.05); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .panel-info { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+        .panel-title { font-size: 20px; font-weight: 800; margin-bottom: 15px; color: white; text-transform: uppercase; letter-spacing: 1px; text-shadow: 0 0 10px rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: space-between; }
+        
+        .features-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .feature-chip {
+            background: rgba(0, 240, 255, 0.05); border: 1px solid rgba(0, 240, 255, 0.2);
+            color: var(--neon-cyan); padding: 6px 12px; border-radius: 8px; font-size: 11px;
+            font-weight: 600; display: inline-flex; align-items: center; gap: 6px; letter-spacing: 0.5px;
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.05);
+        }
+        .feature-chip i { color: var(--warning); text-shadow: 0 0 5px var(--warning); }
+
+        .trust-badges { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); }
+        .badge-item { font-size: 11px; color: var(--success); display: flex; align-items: center; gap: 5px; font-weight: 600; letter-spacing: 0.5px; text-shadow: 0 0 5px rgba(0,255,102,0.3); }
+        .badge-item.error { color: var(--warning); text-shadow: 0 0 5px rgba(255,184,0,0.3); }
+
+        .btn-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+        .btn-outline { 
+            flex: 1; min-width: 110px; font-size: 11px; padding: 10px; border-color: rgba(255,255,255,0.1); 
+            color: var(--text-muted); background: rgba(0,0,0,0.4); border-radius: 8px; height: 40px;
+            display: inline-flex; justify-content: center; align-items: center; gap: 6px;
+            font-weight: 600; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn-outline:hover { background: rgba(255,255,255,0.05); color: white; border-color: var(--neon-cyan); box-shadow: 0 0 10px var(--neon-cyan-dim); }
+        
+        .btn-outline.feedback-btn { border-color: rgba(255, 42, 95, 0.4); color: var(--error); }
+        .btn-outline.feedback-btn:hover { background: rgba(255, 42, 95, 0.1); color: white; border-color: var(--error); box-shadow: 0 0 10px rgba(255, 42, 95, 0.4); }
+
+        /* --- NEW PREMIUM WALLET SYSTEM STYLES --- */
+        .wallet-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .wallet-stat-card { 
+            background: linear-gradient(145deg, rgba(20, 24, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%);
+            border: 1px solid rgba(255,255,255,0.05); padding: 25px; border-radius: 20px; 
+            display: flex; align-items: center; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative; overflow: hidden;
+        }
+        .wallet-stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; }
+        .wallet-stat-card.bal-card::before { background: var(--neon-cyan); box-shadow: 0 0 15px var(--neon-cyan); }
+        .wallet-stat-card.today-card::before { background: var(--success); box-shadow: 0 0 15px var(--success); }
+        .wallet-stat-card.total-card::before { background: var(--neon-purple); box-shadow: 0 0 15px var(--neon-purple); }
+        .wallet-stat-card.pending-card::before { background: var(--warning); box-shadow: 0 0 15px var(--warning); }
+        
+        .wallet-stat-icon { width: 55px; height: 55px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 22px; }
+        .wallet-stat-info h4 { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; font-weight: 600; }
+        .wallet-stat-info h2 { color: white; font-size: 26px; font-weight: 800; letter-spacing: 1px; }
+
+        .wallet-tabs { 
+            display: flex; gap: 15px; margin-bottom: 30px; overflow-x: auto; padding-bottom: 10px;
+            scrollbar-width: none; -ms-overflow-style: none;
+        }
+        .wallet-tabs::-webkit-scrollbar { display: none; }
+        .wallet-tab { 
+            flex: 1; min-width: 160px; padding: 16px 20px; text-align: center; color: var(--text-muted); 
+            font-weight: 700; font-size: 14px; cursor: pointer; border-radius: 16px; transition: 0.3s; 
+            white-space: nowrap; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .wallet-tab:hover { background: rgba(255,255,255,0.05); color: white; }
+        .wallet-tab.active { background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan); border-color: var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan-dim); }
+        .wallet-tab.crypto-tab.active { background: rgba(243, 186, 47, 0.1); color: var(--neon-crypto); border-color: var(--neon-crypto); box-shadow: 0 0 20px var(--neon-crypto-dim); }
+        .wallet-tab.manual-tab.active { background: rgba(188, 19, 254, 0.1); color: var(--neon-purple); border-color: var(--neon-purple); box-shadow: 0 0 20px rgba(188, 19, 254, 0.4); }
+        .wallet-tab.support-tab.active { background: rgba(0, 255, 102, 0.1); color: var(--success); border-color: var(--success); box-shadow: 0 0 20px rgba(0, 255, 102, 0.2); }
+
+        /* PREMIUM DEPOSIT CARDS */
+        .premium-card {
+            background: linear-gradient(145deg, rgba(20, 24, 34, 0.95) 0%, rgba(10, 12, 18, 0.98) 100%);
+            border: 1px solid rgba(255,255,255,0.05); border-radius: 24px; padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6); position: relative; overflow: hidden; max-width: 650px; margin: 0 auto;
+        }
+        .premium-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
+        .premium-card.cyan-glow { border-color: rgba(0, 240, 255, 0.3); box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15); }
+        .premium-card.cyan-glow::before { background: var(--neon-cyan); box-shadow: 0 0 20px var(--neon-cyan); }
+        .premium-card.crypto-glow { border-color: rgba(243, 186, 47, 0.3); box-shadow: 0 10px 40px rgba(243, 186, 47, 0.15); }
+        .premium-card.crypto-glow::before { background: var(--neon-crypto); box-shadow: 0 0 20px var(--neon-crypto); }
+        .premium-card.purple-glow { border-color: rgba(188, 19, 254, 0.3); box-shadow: 0 10px 40px rgba(188, 19, 254, 0.15); }
+        .premium-card.purple-glow::before { background: var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple); }
+        .premium-card.support-glow { border-color: rgba(0, 255, 102, 0.3); box-shadow: 0 10px 40px rgba(0, 255, 102, 0.15); }
+        .premium-card.support-glow::before { background: var(--success); box-shadow: 0 0 20px var(--success); }
+
+        .premium-input { height: 56px !important; border-radius: 16px !important; font-size: 15px !important; background: rgba(0,0,0,0.4) !important; border: 2px solid rgba(255,255,255,0.05) !important; }
+        .premium-input:focus { border-color: var(--neon-cyan) !important; background: rgba(0,0,0,0.6) !important; }
+        .crypto-input:focus { border-color: var(--neon-crypto) !important; }
+        .manual-input:focus { border-color: var(--neon-purple) !important; }
+
+        .premium-btn { height: 56px !important; border-radius: 16px !important; font-size: 16px !important; letter-spacing: 1.5px !important; }
+
+        .qr-box { width: 220px; height: 220px; margin: 0 auto 25px; background: rgba(0,0,0,0.6); border-radius: 20px; padding: 12px; border: 2px dashed var(--neon-cyan); display: flex; justify-content: center; align-items: center; position: relative; box-shadow: inset 0 0 30px rgba(0,0,0,0.8); }
+        .qr-box.crypto-qr { border-color: var(--neon-crypto); }
+        .qr-box.manual-qr { border-color: var(--neon-purple); }
+        .qr-box img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
+        
+        .copy-box { background: rgba(0,0,0,0.5); padding: 18px 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; text-align: left; transition: 0.3s; }
+        .copy-box:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+        .copy-box span { font-size: 12px; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 6px; font-weight: 600; letter-spacing: 0.5px; }
+        .copy-box strong { color: white; font-size: 15px; letter-spacing: 1px; word-break: break-all; }
+
+        .status-details-row { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 10px; }
+        .status-details-row:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+        /* PROFILE & HISTORY */
+        .history-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
+        .history-card { 
+            background: linear-gradient(145deg, rgba(20, 24, 34, 0.9) 0%, rgba(10, 12, 18, 0.95) 100%);
+            padding: 25px; display: flex; flex-direction: column; gap: 15px; 
+            border: 1px solid rgba(255,255,255,0.05); border-left: 4px solid var(--neon-purple); 
+            border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: 0.3s;
+        }
+        .history-card:hover { transform: translateY(-5px); border-color: rgba(188, 19, 254, 0.3); box-shadow: 0 15px 40px rgba(188, 19, 254, 0.15); }
+        .hist-header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; flex-wrap: wrap; gap: 10px; }
+        .hist-details h4 { color: white; font-size: 18px; font-weight: 800; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .hist-details p { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .hist-price { color: var(--neon-cyan); font-weight: 800; font-size: 16px; background: rgba(0,240,255,0.1); padding: 6px 12px; border-radius: 10px; border: 1px solid rgba(0,240,255,0.2); }
+        .key-box { background: rgba(0,0,0,0.6); padding: 15px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; border: 1px dashed rgba(0,255,102,0.3); flex-wrap: wrap; gap: 10px; }
+        .key-text { font-family: monospace; font-size: 18px; font-weight: bold; letter-spacing: 2px; color: var(--success); text-shadow: 0 0 10px rgba(0,255,102,0.4); word-break: break-all; }
+        .profile-stat { display: flex; justify-content: space-between; padding: 18px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; align-items: center; flex-wrap: wrap; gap: 10px;}
+        .profile-stat:last-child { border-bottom: none; }
+
+        /* MODALS */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(8px); padding: 15px; }
+        .modal { background: var(--card-bg); border: 1px solid var(--neon-cyan); width: 100%; max-width: 440px; padding: 30px; border-radius: 24px; text-align: center; box-shadow: 0 0 50px rgba(0,240,255,0.2); animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .success-icon { font-size: 60px; color: var(--success); margin-bottom: 15px; filter: drop-shadow(0 0 15px rgba(0,255,102,0.5)); }
+
+        .checkout-modal { text-align: left; }
+        .checkout-modal .modal-title { font-size: 20px; font-weight: 800; color: white; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .checkout-details { background: rgba(0,0,0,0.5); padding: 20px; border-radius: 16px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .checkout-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; color: var(--text-muted); }
+        .checkout-row:last-child { margin-bottom: 0; }
+        .checkout-row strong { color: white; text-align: right; }
+        .checkout-total { display: flex; justify-content: space-between; font-size: 18px; font-weight: 800; color: var(--success); border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 15px; margin-top: 15px; align-items: center; }
+        .checkout-total > div { display: flex; align-items: center; gap: 10px; }
+        
+        .coupon-wrapper { margin-bottom: 25px; }
+        .coupon-header { margin-bottom: 8px; font-size: 13px; color: var(--text-muted); font-weight: 600; display: flex; justify-content: space-between; align-items: center; }
+        .coupon-box { display: flex; gap: 10px; align-items: stretch; }
+        .coupon-box input { flex: 1; text-transform: uppercase; padding: 0 15px; height: 50px; background: rgba(0,0,0,0.5); border: 1px dashed rgba(188, 19, 254, 0.5); border-radius: 12px; color: white; outline: none; font-size: 14px; margin: 0; }
+        .coupon-box input:focus { border-color: var(--neon-purple); }
+        .coupon-box button { width: auto; height: 50px; padding: 0 20px; font-size: 13px; margin: 0; border-radius: 12px; }
+        
+        .strike-price { text-decoration: line-through; color: var(--text-muted); font-size: 14px; font-weight: 500; }
+        .discount-badge { background: rgba(188, 19, 254, 0.2); color: var(--neon-purple); font-size: 11px; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--neon-purple); font-weight: bold; }
+
+        .checkout-actions { display: flex; gap: 10px; margin-top: 10px; }
+        .checkout-actions .btn-outline { flex: 1; height: 56px; font-size: 14px; border-radius: 16px; }
+        .checkout-actions .btn-purchase { flex: 2; height: 56px; font-size: 15px; border-radius: 16px; }
+
+        /* EMPTY STATE */
+        .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); width: 100%; grid-column: 1 / -1; animation: fadeIn 0.3s; }
+        .empty-state i { font-size: 60px; color: rgba(188, 19, 254, 0.3); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(188, 19, 254, 0.2)); }
+        .empty-state p { font-size: 16px; letter-spacing: 1px; font-weight: 600; color: white; }
+
+        /* TELEGRAM BUTTON */
+        .telegram-btn {
+            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
+            background: linear-gradient(135deg, var(--tg-color), #005580); color: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 28px;
+            box-shadow: 0 10px 25px rgba(0,136,204,0.5); cursor: pointer; z-index: 999;
+            transition: 0.3s; text-decoration: none; border: 2px solid rgba(255,255,255,0.2);
+        }
+        .telegram-btn:hover { transform: scale(1.1) translateY(-5px); box-shadow: 0 15px 30px rgba(0,136,204,0.7); border-color: white; }
+
+        /* --- ADDED FEATURES CSS --- */
+        /* MARQUEE */
+        .marquee-container {
+            width: 100%;
+            background: linear-gradient(90deg, rgba(255, 42, 95, 0.2), rgba(0, 0, 0, 0.8), rgba(255, 42, 95, 0.2));
+            border-bottom: 1px solid rgba(255, 42, 95, 0.3);
+            color: var(--text-main);
+            padding: 8px 0;
+            position: fixed;
+            top: 75px;
+            left: 0;
+            z-index: 990;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .marquee-container span { color: #ff2a5f; margin: 0 30px; text-shadow: 0 0 10px rgba(255, 42, 95, 0.5); }
+
+        /* PRICE LIST TOGGLE */
+        .price-list-container {
+            background: linear-gradient(145deg, #140000 0%, #000000 100%);
+            border: 1px solid #ff0000;
+            box-shadow: 0 5px 15px rgba(255,0,0,0.2);
+            border-radius: 12px;
+            margin-top: 0;
+            padding: 0 10px;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .price-list-container.show {
+            max-height: 800px;
+            opacity: 1;
+            padding: 5px 10px;
+            margin-top: 15px;
+        }
+        .price-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-bottom: 1px dashed rgba(255,0,0,0.3); }
+        .price-list-item:last-child { border-bottom: none; }
+        .btn-red-buy {
+            background: linear-gradient(90deg, #ff0000, #990000);
+            color: #fff; border: 1px solid #ff3333; padding: 8px 20px; border-radius: 8px; font-weight: 800; font-size: 13px;
+            box-shadow: 0 0 15px rgba(255,0,0,0.5); cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .btn-red-buy:hover { background: linear-gradient(90deg, #ff1a1a, #cc0000); box-shadow: 0 0 25px rgba(255,0,0,0.8); transform: translateY(-2px); }
+
+        /* NOTIFICATIONS */
+        .notif-card { background: var(--card-bg); border-left: 4px solid var(--neon-cyan); padding: 15px 20px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); display: flex; align-items: flex-start; gap: 15px; }
+        .notif-card.alert { border-color: var(--error); }
+        .notif-card.promo { border-color: var(--neon-purple); }
+        .notif-icon { font-size: 24px; color: var(--text-muted); }
+        .notif-card.alert .notif-icon { color: var(--error); filter: drop-shadow(0 0 5px rgba(255,42,95,0.5)); }
+        .notif-card.promo .notif-icon { color: var(--neon-purple); filter: drop-shadow(0 0 5px rgba(188,19,254,0.5)); }
+        .notif-content h4 { color: white; margin-bottom: 5px; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .notif-content p { color: var(--text-muted); font-size: 13px; margin-bottom: 5px; }
+        .notif-time { font-size: 11px; color: #666; }
+        
+        /* 🔥 MOBILE RESPONSIVE TWEAKS */
+        @media (max-width: 768px) {
+            .dash-grid, .wallet-stats-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            .auth-card { padding: 30px 20px; }
+            .navbar { padding: 0 15px; height: 70px; }
+            .marquee-container { top: 70px; }
+            .logo { font-size: 18px; }
+            .balance-badge { padding: 6px 12px; font-size: 12px; }
+            
+            .page-header { flex-direction: column; align-items: stretch; gap: 15px; margin-bottom: 20px; }
+            .search-container { max-width: 100%; width: 100%; flex: none; }
+            .page-title { font-size: 22px; text-align: center; }
+            
+            .promo-card { flex: 0 0 90%; height: 160px; }
+            
+            .modal { padding: 25px 20px; }
+            .checkout-details { padding: 15px; }
+            .coupon-box { flex-direction: column; }
+            .coupon-box input, .coupon-box button { width: 100%; }
+            .checkout-actions { flex-direction: column; }
+            .checkout-actions .btn { width: 100%; }
+            
+            .premium-card { padding: 30px 20px; border-radius: 20px; }
+            .dash-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .dash-val { font-size: 20px; }
+            .dash-icon { width: 45px; height: 45px; font-size: 18px; }
+            .quick-actions { gap: 10px; }
+            .action-btn { padding: 15px 10px; font-size: 12px; }
+            .action-btn i { font-size: 22px; }
+            .wallet-stats-grid { grid-template-columns: 1fr; }
+            .wallet-tabs { flex-wrap: nowrap; overflow-x: auto; }
+            .copy-box { flex-direction: column; align-items: flex-start; gap: 15px; }
+            .copy-box button { width: 100% !important; }
+        }
+    </style>
+</head>
+<body>
+<!-- LOADER -->
+<div id="loader">
+    <div class="spinner"></div>
+    <p style="margin-top: 20px; color: var(--neon-cyan); font-weight: 700; letter-spacing: 2px; text-shadow: 0 0 10px var(--neon-cyan-dim);">INITIALIZING...</p>
+</div>
+<!-- TOAST CONTAINER -->
+<div id="toast-container"></div>
+
+<!-- AUTHENTICATION SCREEN -->
+<div id="auth-screen">
+    <!-- LOGIN FORM -->
+    <div class="auth-card glass" id="login-box">
+        <h1>FF.<span>PANEL</span></h1>
+        <p>Welcome back! Login to continue.</p>
+        <div class="input-group">
+            <input id="login-email" placeholder="Email Address" type="email"/>
+        </div>
+        <div class="input-group">
+            <input id="login-pass" placeholder="Password" type="password"/>
+        </div>
+        <button class="btn btn-primary" id="btn-login"><i class="fas fa-sign-in-alt"></i> Secure Login</button>
+        <p class="auth-toggle">New user? <span id="go-to-signup">Create Account</span></p>
+        <div class="contact-buttons">
+            <a class="btn btn-outline btn-wa" href="#" id="auth-wa-link" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a class="btn btn-outline btn-tg" href="#" id="auth-tg-link" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+        </div>
+    </div>
+    
+    <!-- SIGNUP FORM -->
+    <div class="auth-card glass hidden" id="signup-box">
+        <h1>JOIN <span>NOW</span></h1>
+        <p>Create an account to get premium access.</p>
+        <div class="input-group">
+            <input id="signup-email" placeholder="Email Address" type="email"/>
+        </div>
+        <div class="input-group">
+            <input id="signup-pass" placeholder="Password (Min 6 chars)" type="password"/>
+        </div>
+        <div class="input-group">
+            <input id="signup-referral" placeholder="Referral Code (Optional)" type="text"/>
+        </div>
+        <button class="btn btn-primary" id="btn-signup"><i class="fas fa-user-plus"></i> Sign Up</button>
+        <p class="auth-toggle">Already registered? <span id="go-to-login">Login here</span></p>
+        <div class="contact-buttons">
+            <a class="btn btn-outline btn-wa" href="#" id="auth-wa-link-2" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+            <a class="btn btn-outline btn-tg" href="#" id="auth-tg-link-2" target="_blank"><i class="fab fa-telegram-plane"></i> Telegram</a>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP SCREEN -->
+<div id="main-app">
+    <!-- NAVBAR -->
+    <nav class="navbar glass">
+        <div class="logo">
+            <img id="site-logo" src="" style="height:35px;display:none; border-radius: 6px;"/>
+            <span id="site-name">FF.PANEL</span>
+        </div>
+        <div class="nav-right">
+            <div class="balance-badge"><i class="fas fa-wallet"></i> ₹<span id="nav-balance">0.00</span></div>
+            <button class="menu-btn" id="menu-toggle"><i class="fas fa-bars"></i></button>
+        </div>
+        <!-- DROPDOWN MENU -->
+        <div class="dropdown glass" id="dropdown-menu">
+            <div class="dropdown-item" onclick="navigate('dashboard')"><i class="fas fa-chart-line"></i> Dashboard</div>
+            <div class="dropdown-item" onclick="navigate('home')"><i class="fas fa-shopping-cart"></i> Buy Keys</div>
+            <div class="dropdown-item" onclick="navigate('wallet')"><i class="fas fa-wallet"></i> My Wallet</div>
+            <div class="dropdown-item" onclick="navigate('purchase-history')"><i class="fas fa-receipt"></i> Purchase History</div>
+            <div class="dropdown-item" onclick="navigate('history')"><i class="fas fa-key"></i> My Keys</div>
+            <div class="dropdown-item hidden" id="menu-reseller" onclick="navigate('reseller')"><i class="fas fa-briefcase"></i> Reseller Dashboard</div>
+            <div class="dropdown-item" onclick="navigate('referrals')"><i class="fas fa-users"></i> My Referrals</div>
+            <div class="dropdown-item" onclick="navigate('commissions')"><i class="fas fa-money-bill-wave"></i> Commissions</div>
+            <div class="dropdown-item" onclick="navigate('notifications')"><i class="fas fa-bell"></i> Notifications</div>
+            <div class="dropdown-item" onclick="navigate('profile')"><i class="fas fa-user-astronaut"></i> Profile</div>
+            <div class="dropdown-item" id="btn-logout" style="color: var(--error); border-top: 1px solid rgba(255,255,255,0.1);"><i class="fas fa-sign-out-alt"></i> Logout</div>
+        </div>
+    </nav>
+
+    <!-- ANNOUNCEMENT MARQUEE -->
+    <div id="announcement-marquee" class="marquee-container hidden">
+        <marquee id="marquee-text" scrollamount="5"></marquee>
+    </div>
+
+    <!-- PAGE: DASHBOARD (NEW FIRST LANDING PAGE) - HIDDEN BY DEFAULT UNTIL AUTH -->
+    <div class="page-content hidden" id="page-dashboard">
+        <div class="page-header">
+            <h2 class="page-title">Welcome <span>Back!</span></h2>
+        </div>
+
+        <!-- STAT CARDS -->
+        <div class="dash-grid">
+            <div class="dash-card cyan">
+                <div class="dash-icon" style="background: rgba(0,240,255,0.1); color: var(--neon-cyan);"><i class="fas fa-key"></i></div>
+                <div class="dash-val" id="dash-stat-keys">0</div>
+                <div class="dash-label">Purchased Keys</div>
+            </div>
+            <div class="dash-card purple">
+                <div class="dash-icon" style="background: rgba(188,19,254,0.1); color: var(--neon-purple);"><i class="fas fa-chart-line"></i></div>
+                <div class="dash-val" id="dash-stat-spent">₹0.00</div>
+                <div class="dash-label">Total Spent</div>
+            </div>
+            <div class="dash-card success">
+                <div class="dash-icon" style="background: rgba(0,255,102,0.1); color: var(--success);"><i class="fas fa-wallet"></i></div>
+                <div class="dash-val" id="dash-stat-bal">₹0.00</div>
+                <div class="dash-label">Wallet Balance</div>
+            </div>
+            <div class="dash-card warning">
+                <div class="dash-icon" style="background: rgba(255,184,0,0.1); color: var(--warning);"><i class="fas fa-user-shield"></i></div>
+                <div class="dash-val" id="dash-stat-role" style="font-size: 20px;">USER</div>
+                <div class="dash-label">Account Role</div>
+            </div>
+        </div>
+
+        <!-- QUICK ACTIONS -->
+        <h3 class="dash-section-title"><i class="fas fa-bolt"></i> Quick Actions</h3>
+        <div class="quick-actions">
+            <div class="action-btn c1" onclick="navigate('home')">
+                <i class="fas fa-shopping-cart"></i> Buy Keys
+            </div>
+            <div class="action-btn c2" onclick="navigate('history')">
+                <i class="fas fa-key"></i> My Keys
+            </div>
+            <div class="action-btn c3" onclick="navigate('wallet')">
+                <i class="fas fa-wallet"></i> Wallet
+            </div>
+            <div class="action-btn c4" onclick="navigate('profile')">
+                <i class="fas fa-user"></i> Profile
+            </div>
+        </div>
+
+        <!-- RECENT PURCHASES -->
+        <h3 class="dash-section-title"><i class="fas fa-history"></i> Recent Purchases</h3>
+        <div class="dash-table-wrapper">
+            <table class="dash-table">
+                <thead><tr><th>Date</th><th>Panel</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody id="dash-recent-purchases">
+                    <tr><td colspan="4" style="text-align:center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TOP SELLERS -->
+        <h3 class="dash-section-title"><i class="fas fa-trophy"></i> Top Buyers / Sellers</h3>
+        <div class="dash-table-wrapper">
+            <table class="dash-table">
+                <thead><tr><th>Rank</th><th>User</th><th>Keys</th><th>Spent</th><th>Role</th></tr></thead>
+                <tbody id="dash-top-sellers">
+                    <tr><td colspan="5" style="text-align:center;">Loading data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- TOP PRICING RANKING -->
+        <h3 class="dash-section-title"><i class="fas fa-medal" style="color: var(--warning);"></i> Top Pricing Ranking</h3>
+        <div class="dash-table-wrapper">
+            <table class="dash-table">
+                <thead><tr><th>Rank</th><th>Title</th><th>Price</th></tr></thead>
+                <tbody id="dash-top-pricing">
+                    <tr><td colspan="3" style="text-align:center;">Loading ranking...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGE: HOME (BUY KEYS / PANEL LIST) -->
+    <div class="page-content hidden" id="page-home">
+        <div class="page-header">
+            <h2 class="page-title">Premium <span>Store</span></h2>
+            <!-- LIVE SEARCH BAR -->
+            <div class="search-container input-group">
+                <input id="search-input" placeholder="Search panels or features..." type="text"/>
+                <i class="fas fa-search" id="search-icon"></i>
+                <i class="fas fa-spinner search-loader" id="search-loader"></i>
+            </div>
+        </div>
+
+        <!-- PROMOTION SLIDER CONTAINER -->
+        <div id="promo-container" class="promo-slider hidden">
+            <!-- Realtime Firebase Promos Injected Here -->
+        </div>
+
+        <!-- PANELS CONTAINER -->
+        <div class="panel-grid" id="panels-container">
+            <!-- Panels Injected via JS -->
+        </div>
+        
+        <!-- EMPTY STATE FOR SEARCH -->
+        <div class="empty-state hidden" id="search-empty">
+            <i class="fas fa-search-minus"></i>
+            <p>No Panel Found</p>
+            <button class="btn btn-primary" onclick="document.getElementById('search-input').value=''; document.getElementById('search-input').dispatchEvent(new Event('input'));" style="margin-top: 20px; width: auto; height: 40px;">Clear Search</button>
+        </div>
+
+        <!-- FOOTER INFO -->
+        <div style="padding:40px 20px;text-align:center;margin-top:50px;border-top:1px solid rgba(255,255,255,0.1);">
+            <h2 style="color:#ff3b3b;font-weight:800;margin-bottom:10px;">FF PANEL STORE</h2>
+            <p style="color:#ccc;font-size:14px;margin-bottom:20px;">
+                Best Trusted Online Free Fire Store to Buy 100% Geniune. All Type FF Panel, Guild Glory Bot & Free Fire Uid Likes.
+            </p>
+            <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:25px;">
+                <span style="border:1px solid #ff3b3b;padding:8px 15px;border-radius:20px;color:#ff3b3b;font-size:12px;">Safe Payment</span>
+                <span style="border:1px solid #ff3b3b;padding:8px 15px;border-radius:20px;color:#ff3b3b;font-size:12px;">Secure Checkout</span>
+                <span style="border:1px solid #ff3b3b;padding:8px 15px;border-radius:20px;color:#ff3b3b;font-size:12px;">248k+ Users</span>
+            </div>
+            <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px;color:#00ff66;font-size:13px;font-weight:600;">
+                <span>✔ Fast Delivery</span>
+                <span>✔ Instant Service</span>
+                <span>✔ Trusted Seller</span>
+            </div>
+            <p style="color:#aaa;font-size:12px;">
+                Terms &amp; Conditions | Privacy Policy <br/>
+                © 2026-2031 Free Fire Panel Store. All rights reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- PAGE: WALLET DASHBOARD -->
+    <div class="page-content hidden" id="page-wallet">
+        <div class="page-header">
+            <h2 class="page-title">My <span>Wallet</span></h2>
+        </div>
+        
+        <!-- WALLET STATS -->
+        <div class="wallet-stats-grid">
+            <div class="wallet-stat-card bal-card">
+                <div class="wallet-stat-icon" style="background: rgba(0, 240, 255, 0.1); color: var(--neon-cyan);"><i class="fas fa-wallet"></i></div>
+                <div class="wallet-stat-info">
+                    <h4>Current Balance</h4>
+                    <h2 id="wallet-stat-bal">₹0.00</h2>
+                </div>
+            </div>
+            <div class="wallet-stat-card today-card">
+                <div class="wallet-stat-icon" style="background: rgba(0, 255, 102, 0.1); color: var(--success);"><i class="fas fa-calendar-day"></i></div>
+                <div class="wallet-stat-info">
+                    <h4>Today Deposit</h4>
+                    <h2 id="wallet-stat-today">₹0.00</h2>
+                </div>
+            </div>
+            <div class="wallet-stat-card total-card">
+                <div class="wallet-stat-icon" style="background: rgba(188, 19, 254, 0.1); color: var(--neon-purple);"><i class="fas fa-arrow-down"></i></div>
+                <div class="wallet-stat-info">
+                    <h4>Total Deposit</h4>
+                    <h2 id="wallet-stat-dep">₹0.00</h2>
+                </div>
+            </div>
+            <div class="wallet-stat-card pending-card">
+                <div class="wallet-stat-icon" style="background: rgba(255, 184, 0, 0.1); color: var(--warning);"><i class="fas fa-clock"></i></div>
+                <div class="wallet-stat-info">
+                    <h4>Pending Deposit</h4>
+                    <h2 id="wallet-stat-pending">₹0.00</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- WALLET TABS -->
+        <div class="wallet-tabs">
+            <div class="wallet-tab active" onclick="switchWalletTab('auto')" id="tab-btn-auto"><i class="fas fa-bolt"></i> Instant UPI</div>
+            <div class="wallet-tab crypto-tab" onclick="switchWalletTab('crypto')" id="tab-btn-crypto"><i class="fab fa-bitcoin"></i> Binance / USDT</div>
+            <div class="wallet-tab manual-tab" onclick="switchWalletTab('manual')" id="tab-btn-manual"><i class="fas fa-qrcode"></i> UPI Manual</div>
+            <div class="wallet-tab support-tab" onclick="switchWalletTab('support')" id="tab-btn-support"><i class="fas fa-headset"></i> Admin Support</div>
+        </div>
+
+        <!-- TAB CONTENT: AUTO DEPOSIT (ZAPUPI) -->
+        <div id="wallet-tab-auto" class="wallet-section">
+            <div class="premium-card cyan-glow">
+                <h3 style="color:white; margin-bottom: 15px; font-size: 22px; font-weight:800; text-transform:uppercase; letter-spacing:1px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-bolt" style="color:var(--neon-cyan); font-size: 28px; filter: drop-shadow(0 0 10px var(--neon-cyan));"></i> Instant Gateway
+                </h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px; line-height: 1.6;">
+                    Fast and secure payment via UPI. Your wallet balance will be updated automatically within seconds.
+                </p>
+                <div class="input-group">
+                    <input id="add-amount" class="premium-input" placeholder="Enter Amount (₹)" required="" type="number"/>
+                </div>
+                <div class="input-group">
+                    <input id="add-phone" class="premium-input" placeholder="Your WhatsApp Number" required="" type="tel"/>
+                </div>
+                <button class="btn btn-purchase premium-btn" id="btn-submit-payment" style="width: 100%; margin-top: 10px;">
+                    PAY INSTANTLY <i class="fas fa-arrow-right" style="margin-left: 8px;"></i>
+                </button>
+
+                <!-- ORDER STATUS CARD -->
+                <div style="margin-top: 40px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 30px;">
+                    <h4 style="color:var(--warning); margin-bottom: 15px; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;"><i class="fas fa-search"></i> Check Order Status</h4>
+                    <div class="input-group" style="display: flex; gap: 10px;">
+                        <input id="status-order-id" class="premium-input" placeholder="Order ID (e.g., ORD123...)" type="text" style="margin-bottom: 0;"/>
+                        <button class="btn btn-outline premium-btn" id="btn-check-status" style="width: auto; border-color: var(--warning); color: var(--warning); padding: 0 25px;">
+                            VERIFY
+                        </button>
+                    </div>
+                    <div id="status-result" class="hidden" style="margin-top: 20px; text-align: left; background: rgba(0,0,0,0.4); padding: 20px; border-radius: 16px; border: 1px solid rgba(255,184,0,0.3);">
+                        <div class="status-details-row"><span style="color:var(--text-muted); font-size:13px;">Order ID</span><strong id="res-oid" style="color:white; font-size:13px; word-break:break-all;">-</strong></div>
+                        <div class="status-details-row"><span style="color:var(--text-muted); font-size:13px;">Status</span><strong id="res-status" style="font-size:14px; font-weight:800;">-</strong></div>
+                        <div class="status-details-row"><span style="color:var(--text-muted); font-size:13px;">Amount</span><strong id="res-amount" style="color:var(--neon-cyan); font-size:14px;">-</strong></div>
+                        <div class="status-details-row" style="border-bottom:none;"><span style="color:var(--text-muted); font-size:13px;">Date</span><strong id="res-date" style="color:white; font-size:13px;">-</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: CRYPTO DEPOSIT (BINANCE/USDT) -->
+        <div id="wallet-tab-crypto" class="wallet-section hidden">
+            <div class="premium-card crypto-glow">
+                <h3 style="color:white; margin-bottom: 15px; font-size: 22px; font-weight:800; text-transform:uppercase; letter-spacing:1px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fab fa-bitcoin" style="color:var(--neon-crypto); font-size: 28px; filter: drop-shadow(0 0 10px var(--neon-crypto));"></i> Binance / USDT
+                </h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.6;">
+                    Scan the QR code or copy the address below to send USDT. Current Rate: <strong style="color:var(--neon-crypto); font-size: 16px;">1 USDT = ₹<span id="crypto-rate">88.00</span></strong>
+                </p>
+                
+                <div class="qr-box crypto-qr">
+                    <img id="crypto-qr-display" src="" alt="Crypto QR" onerror="this.style.display='none'; this.parentElement.innerHTML+='<i class=\\'fas fa-qrcode\\' style=\\'font-size:50px; color:rgba(255,255,255,0.1);\\'></i>';">
+                </div>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <a id="crypto-qr-download" href="#" download="Binance_QR.jpg" class="btn btn-outline" style="width: auto; padding: 0 30px; border-color: var(--neon-crypto); color: var(--neon-crypto); height: 45px; border-radius: 12px;"><i class="fas fa-download"></i> Download QR</a>
+                </div>
+
+                <div class="copy-box">
+                    <div>
+                        <span>Binance Pay ID</span>
+                        <strong id="crypto-payid-display">Loading...</strong>
+                    </div>
+                    <button class="btn btn-outline" style="width: auto; height: 40px; padding: 0 20px; border-color: var(--neon-crypto); color: var(--neon-crypto); border-radius: 10px;" onclick="copyToClipboard('crypto-payid-display', 'Binance Pay ID')"><i class="fas fa-copy"></i> COPY</button>
+                </div>
+
+                <div class="copy-box" style="margin-bottom: 30px;">
+                    <div>
+                        <span>USDT Address (TRC20)</span>
+                        <strong id="crypto-address-display">Loading...</strong>
+                    </div>
+                    <button class="btn btn-outline" style="width: auto; height: 40px; padding: 0 20px; border-color: var(--neon-crypto); color: var(--neon-crypto); border-radius: 10px;" onclick="copyToClipboard('crypto-address-display', 'USDT Address')"><i class="fas fa-copy"></i> COPY</button>
+                </div>
+
+                <button class="btn btn-crypto premium-btn" style="width: 100%;" onclick="openModal('modal-crypto-deposit')">
+                    <i class="fas fa-check-circle"></i> I HAVE PAID
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: MANUAL UPI DEPOSIT -->
+        <div id="wallet-tab-manual" class="wallet-section hidden">
+            <div class="premium-card purple-glow">
+                <h3 style="color:white; margin-bottom: 15px; font-size: 22px; font-weight:800; text-transform:uppercase; letter-spacing:1px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-qrcode" style="color:var(--neon-purple); font-size: 28px; filter: drop-shadow(0 0 10px var(--neon-purple));"></i> Manual UPI
+                </h3>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.6;">
+                    Scan the QR code or copy the UPI ID below to transfer funds manually.
+                </p>
+                
+                <div class="qr-box manual-qr">
+                    <img id="manual-qr-display" src="" alt="UPI QR" onerror="this.style.display='none'; this.parentElement.innerHTML+='<i class=\\'fas fa-qrcode\\' style=\\'font-size:50px; color:rgba(255,255,255,0.1);\\'></i>';">
+                </div>
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <a id="manual-qr-download" href="#" download="UPI_QR.jpg" class="btn btn-outline" style="width: auto; padding: 0 30px; border-color: var(--neon-purple); color: var(--neon-purple); height: 45px; border-radius: 12px;"><i class="fas fa-download"></i> Download QR</a>
+                </div>
+
+                <div class="copy-box" style="margin-bottom: 30px;">
+                    <div>
+                        <span>Official UPI ID</span>
+                        <strong id="manual-upi-display">Loading...</strong>
+                    </div>
+                    <button class="btn btn-outline" style="width: auto; height: 40px; padding: 0 20px; border-color: var(--neon-purple); color: var(--neon-purple); border-radius: 10px;" onclick="copyToClipboard('manual-upi-display', 'UPI ID')"><i class="fas fa-copy"></i> COPY</button>
+                </div>
+
+                <div class="input-group">
+                    <input id="manual-amount" class="premium-input" placeholder="Amount Sent (₹)" required="" type="number"/>
+                </div>
+                <div class="input-group">
+                    <input id="manual-utr" class="premium-input" placeholder="12-Digit UTR / Ref No." required="" type="text"/>
+                </div>
+                <div class="input-group">
+                    <input id="manual-app" class="premium-input" placeholder="Payment App (PhonePe, Paytm, etc.)" required="" type="text"/>
+                </div>
+                <div class="input-group">
+                    <input id="manual-screenshot" class="premium-input" placeholder="Screenshot URL (Drive, ImgBB, etc.)" required="" type="url"/>
+                </div>
+                <button class="btn btn-purchase premium-btn" id="btn-submit-manual" style="width: 100%; margin-top: 10px;">
+                    <i class="fas fa-paper-plane"></i> SUBMIT REQUEST
+                </button>
+            </div>
+        </div>
+
+        <!-- TAB CONTENT: ADMIN SUPPORT -->
+        <div id="wallet-tab-support" class="wallet-section hidden">
+            <div class="premium-card support-glow" style="text-align: center;">
+                <i class="fas fa-headset" style="font-size: 60px; color: var(--success); margin-bottom: 20px; filter: drop-shadow(0 0 15px rgba(0,255,102,0.5));"></i>
+                <h3 style="color:white; margin-bottom: 15px; font-size: 24px; font-weight:800; text-transform:uppercase; letter-spacing:1px;">
+                    Need Help?
+                </h3>
+                <p style="color: var(--text-muted); font-size: 15px; margin-bottom: 35px; line-height: 1.6;">
+                    If you are facing any issues with deposits, purchases, or your account, please contact our official support team.
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <a href="#" id="support-wa-btn" target="_blank" class="btn premium-btn" style="background: rgba(37, 211, 102, 0.1); border-color: var(--wa-color); color: var(--wa-color);">
+                        <i class="fab fa-whatsapp" style="font-size: 20px;"></i> Contact on WhatsApp
+                    </a>
+                    <a href="#" id="support-tg-btn" target="_blank" class="btn premium-btn" style="background: rgba(0, 136, 204, 0.1); border-color: var(--tg-color); color: var(--tg-color);">
+                        <i class="fab fa-telegram-plane" style="font-size: 20px;"></i> Contact on Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- PAGE: PROFILE -->
+    <div class="page-content hidden" id="page-profile">
+        <div class="page-header"><h2 class="page-title">Account <span>Details</span></h2></div>
+        <div class="glass" style="padding: 10px 0; max-width: 600px; margin: 0 auto;">
+            
+            <div class="profile-stat" id="reseller-badge-container" style="display:none; background: rgba(0, 240, 255, 0.05);">
+                <span style="color: var(--text-muted);"><i class="fas fa-user-tie"></i> Account Role</span>
+                <strong style="color: var(--neon-cyan);"><i class="fas fa-check-circle"></i> Verified Reseller</strong>
+            </div>
+
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-id-badge"></i> Name</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <strong id="prof-name">...</strong>
+                    <button class="btn-outline" style="padding: 4px 10px; font-size: 11px; height: 30px; min-width: auto;" onclick="editProfileName()"><i class="fas fa-edit"></i> Edit</button>
+                </div>
+            </div>
+            
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-fingerprint"></i> UID</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <strong id="prof-uid" style="font-size:12px; word-break: break-all;">...</strong>
+                    <button class="btn-outline" style="padding: 4px 10px; font-size: 11px; height: 30px; min-width: auto;" onclick="copyToClipboard('prof-uid', 'UID')"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+            
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-link"></i> Referral Code</span>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <strong id="prof-ref-code" style="color:var(--neon-cyan);">...</strong>
+                    <button class="btn-outline" style="padding: 4px 10px; font-size: 11px; height: 30px; min-width: auto;" onclick="copyToClipboard('prof-ref-code', 'Referral Code')"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-envelope"></i> Email</span>
+                <strong id="prof-email">...</strong>
+            </div>
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-wallet"></i> Current Balance</span>
+                <strong style="color: var(--success); font-size: 16px;">₹ <span id="prof-bal">0.00</span></strong>
+            </div>
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-shopping-cart"></i> Total Purchases</span>
+                <strong id="prof-purchases">0</strong>
+            </div>
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-chart-line"></i> Total Spent</span>
+                <strong style="color: var(--neon-purple); font-size: 16px;">₹ <span id="prof-spent">0.00</span></strong>
+            </div>
+
+            <div class="profile-stat" id="prof-profit-container" style="display:none;">
+                <span style="color: var(--text-muted);"><i class="fas fa-coins"></i> Total Profit (Saved)</span>
+                <strong style="color: var(--success); font-size: 16px;">₹ <span id="prof-profit">0.00</span></strong>
+            </div>
+
+            <div class="profile-stat">
+                <span style="color: var(--text-muted);"><i class="fas fa-calendar-alt"></i> Joined Date</span>
+                <strong id="prof-date">...</strong>
+            </div>
+            
+            <div style="padding: 20px;">
+                <button class="btn btn-outline" style="width:100%; border-color: rgba(255,255,255,0.2); color: white;" onclick="resetPassword()"><i class="fas fa-key"></i> Reset Password</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE: RESELLER DASHBOARD -->
+    <div class="page-content hidden" id="page-reseller">
+        <div class="page-header"><h2 class="page-title">Reseller <span>Dashboard</span></h2></div>
+        
+        <div class="dash-grid">
+            <div class="dash-card cyan">
+                <div class="dash-icon" style="background: rgba(0,240,255,0.1); color: var(--neon-cyan);"><i class="fas fa-users"></i></div>
+                <div class="dash-val" id="reseller-team-count">0</div>
+                <div class="dash-label">Team Count</div>
+            </div>
+            <div class="dash-card purple">
+                <div class="dash-icon" style="background: rgba(188,19,254,0.1); color: var(--neon-purple);"><i class="fas fa-shopping-cart"></i></div>
+                <div class="dash-val" id="reseller-total-sales">₹0.00</div>
+                <div class="dash-label">Total Sales</div>
+            </div>
+            <div class="dash-card success">
+                <div class="dash-icon" style="background: rgba(0,255,102,0.1); color: var(--success);"><i class="fas fa-money-bill-wave"></i></div>
+                <div class="dash-val" id="reseller-total-comm">₹0.00</div>
+                <div class="dash-label">Commission Earned</div>
+            </div>
+            <div class="dash-card warning">
+                <div class="dash-icon" style="background: rgba(255,184,0,0.1); color: var(--warning);"><i class="fas fa-wallet"></i></div>
+                <div class="dash-val" id="reseller-avail-bal">₹0.00</div>
+                <div class="dash-label">Available Balance</div>
+            </div>
+        </div>
+
+        <div class="glass" style="padding: 30px 20px; text-align: center; margin-top: 20px; border-color: var(--neon-cyan);">
+            <h3 style="color:white; margin-bottom: 15px; font-weight: 800; text-transform: uppercase;"><i class="fas fa-link"></i> Your Referral Code</h3>
+            <div style="font-size: 28px; color: var(--neon-cyan); font-weight: bold; letter-spacing: 2px; margin-bottom: 25px; text-shadow: 0 0 15px var(--neon-cyan-dim);" id="reseller-code-display">LOADING...</div>
+            <div style="display:flex; justify-content:center; gap: 15px; flex-wrap: wrap;">
+                <button class="btn btn-outline" style="width: auto; padding: 0 25px;" onclick="copyToClipboard('reseller-code-display', 'Referral Code')"><i class="fas fa-copy"></i> Copy Code</button>
+                <button class="btn btn-primary" style="width: auto; padding: 0 25px;" onclick="shareReferralCode()"><i class="fas fa-share-alt"></i> Share Code</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE: MY REFERRALS -->
+    <div class="page-content hidden" id="page-referrals">
+        <div class="page-header">
+            <h2 class="page-title">My <span>Referrals</span></h2>
+            <div class="search-container input-group">
+                <input id="search-referrals" placeholder="Search referrals..." type="text"/>
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="dash-table-wrapper">
+            <table class="dash-table">
+                <thead><tr><th>User Email</th><th>Join Date</th><th>Status</th><th>Purchases</th><th>Earnings Generated</th></tr></thead>
+                <tbody id="referrals-tbody">
+                    <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGE: COMMISSION HISTORY -->
+    <div class="page-content hidden" id="page-commissions">
+        <div class="page-header">
+            <h2 class="page-title">Commission <span>History</span></h2>
+            <div class="search-container input-group">
+                <input id="search-commissions" placeholder="Search commissions..." type="text"/>
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div style="margin-bottom: 20px; font-size: 18px; color: var(--success); font-weight: bold; padding: 15px; background: rgba(0,255,102,0.1); border-radius: 12px; border: 1px solid rgba(0,255,102,0.2); display: inline-block;">
+            <i class="fas fa-coins"></i> Total Commission: ₹<span id="total-comm-counter">0.00</span>
+        </div>
+        <div class="dash-table-wrapper">
+            <table class="dash-table">
+                <thead><tr><th>Date</th><th>Plan</th><th>From User</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody id="commissions-tbody">
+                    <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGE: PURCHASE HISTORY -->
+    <div class="page-content hidden" id="page-purchase-history">
+        <div class="page-header">
+            <h2 class="page-title">Purchase <span>History</span></h2>
+            <div class="search-container input-group">
+                <input id="search-phistory" placeholder="Search purchases..." type="text"/>
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+        <div class="dash-table-wrapper">
+            <table class="dash-table">
+                <thead><tr><th>Date</th><th>Panel</th><th>Plan</th><th>Amount</th><th>Status</th></tr></thead>
+                <tbody id="phistory-tbody">
+                    <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- PAGE: NOTIFICATION CENTER -->
+    <div class="page-content hidden" id="page-notifications">
+        <div class="page-header"><h2 class="page-title">Notification <span>Center</span></h2></div>
+        <div id="notifications-container" style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="empty-state"><p>Loading notifications...</p></div>
+        </div>
+    </div>
+
+    <!-- PAGE: HISTORY (MY KEYS) -->
+    <div class="page-content hidden" id="page-history">
+        <div class="page-header"><h2 class="page-title">My <span>Keys</span></h2></div>
+        <div class="history-list" id="history-container">
+            <!-- History injected via JS -->
+        </div>
+    </div>
+
+    <!-- TELEGRAM BUTTON -->
+    <a class="telegram-btn" href="#" id="global-telegram-btn" target="_blank" style="display: none;">
+        <i class="fab fa-telegram-plane"></i>
+    </a>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay hidden" id="modal-checkout">
+    <div class="modal checkout-modal">
+        <div class="modal-title"><i class="fas fa-shopping-cart" style="color:var(--neon-cyan);"></i> Checkout</div>
+        
+        <div class="checkout-details">
+            <div class="checkout-row">
+                <span>Item:</span>
+                <strong id="chk-panel-name">Panel Name</strong>
+            </div>
+            <div class="checkout-row">
+                <span>Plan:</span>
+                <strong id="chk-plan-label" style="color:var(--warning);">Plan Label</strong>
+            </div>
+            <div class="checkout-row">
+                <span>Original Price:</span>
+                <strong>₹<span id="chk-orig-price">0.00</span></strong>
+            </div>
+            
+            <div class="checkout-total">
+                <span>To Pay:</span>
+                <div>
+                    <span id="chk-strike-price" class="strike-price hidden">₹0.00</span>
+                    <span>₹<span id="chk-final-price">0.00</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- COUPON SECTION -->
+        <div class="coupon-wrapper">
+            <div class="coupon-header">
+                <span>Have a Promo Code?</span>
+                <span id="chk-discount-badge" class="discount-badge hidden">0% OFF</span>
+            </div>
+            <div class="coupon-box">
+                <input type="text" id="chk-coupon-input" placeholder="Enter Code">
+                <button class="btn btn-primary" onclick="applyCouponUI()" id="btn-apply-coupon">APPLY</button>
+            </div>
+        </div>
+
+        <div class="checkout-actions">
+            <button class="btn btn-outline" onclick="closeModal('modal-checkout')">CANCEL</button>
+            <button class="btn btn-purchase" id="btn-confirm-pay" onclick="executePurchase()">CONFIRM PAY</button>
+        </div>
+    </div>
+</div>
+
+<!-- PURCHASE SUCCESS MODAL (Updated for Smart Stock System) -->
+<div class="modal-overlay hidden" id="modal-success">
+    <div class="modal">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2 style="color: white; margin-bottom: 10px; font-weight: 800; letter-spacing: 1px;">PURCHASE SUCCESS!</h2>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px;">Your payment was processed successfully.</p>
+        
+        <div style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 12px; border: 1px dashed var(--success); margin-bottom: 25px; box-shadow: inset 0 0 20px rgba(0,255,102,0.1); word-break: break-all;">
+            <span id="modal-key-text-label" style="display:block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; font-weight: 600;">License Key</span>
+            <span id="modal-key-display" style="font-family: monospace; font-size: 20px; font-weight: bold; color: var(--success); letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,255,102,0.5);">XXXXXX</span>
+        </div>
+        
+        <div id="modal-success-action-btns" style="display: flex; gap: 10px; flex-direction: column;">
+            <!-- Buttons Injected Dynamically Based on Stock -->
+        </div>
+    </div>
+</div>
+
+<!-- CRYPTO DEPOSIT MODAL -->
+<div class="modal-overlay hidden" id="modal-crypto-deposit">
+    <div class="modal" style="border-color: var(--neon-crypto); box-shadow: 0 0 50px rgba(243, 186, 47, 0.2);">
+        <h3 style="color: white; margin-bottom: 20px; font-weight: 800; text-transform: uppercase;"><i class="fab fa-bitcoin" style="color:var(--neon-crypto);"></i> Submit Crypto Details</h3>
+        <div class="input-group">
+            <input id="crypto-amount" class="premium-input" placeholder="Amount Sent (USDT or INR)" required="" type="number"/>
+        </div>
+        <div class="input-group">
+            <input id="crypto-hash" class="premium-input" placeholder="Transaction Hash / ID" required="" type="text"/>
+        </div>
+        <div class="input-group">
+            <input id="crypto-screenshot" class="premium-input" placeholder="Screenshot URL (Drive, ImgBB)" required="" type="url"/>
+        </div>
+        <div class="input-group">
+            <input id="crypto-note" class="premium-input" placeholder="Optional Note" type="text"/>
+        </div>
+        <div class="checkout-actions">
+            <button class="btn btn-outline premium-btn" onclick="closeModal('modal-crypto-deposit')">CANCEL</button>
+            <button class="btn btn-crypto premium-btn" id="btn-submit-crypto" onclick="submitCryptoDeposit()">SUBMIT</button>
+        </div>
+    </div>
+</div>
+
+<!-- ========================================== -->
+<!-- FIREBASE & APPLICATION LOGIC (PURE JS)     -->
+<!-- ========================================== -->
+<script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } 
+            from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getDatabase, ref, set, get, onValue, push, runTransaction, serverTimestamp, update } 
+            from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // --- FIREBASE CONFIGURATION ---
+        const firebaseConfig = {
+  apiKey: "AIzaSyBpzotghLLG-_6DxxD1NrPmRJ1rnguNb5M",
+  authDomain: "yourxhannel.firebaseapp.com",
+  databaseURL: "https://yourxhannel-default-rtdb.firebaseio.com",
+  projectId: "yourxhannel",
+  storageBucket: "yourxhannel.firebasestorage.app",
+  messagingSenderId: "36678174512",
+  appId: "1:36678174512:web:ebc8d50b3e97b38631eaf5",
+  measurementId: "G-VEXTXHXVF1"
+        };
+
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getDatabase(app);
+        } catch (e) {
+            console.error("Firebase Init Error:", e);
+            alert("Database connection failed. Please check configuration.");
+        }
+
+        // --- STATE & DOM ELEMENTS ---
+        let currentUser = null;
+        let userData = { balance: 0 };
+        window.ZAP_KEY = ""; 
+        window.isReseller = false;
+        window.keyStocksCache = {};
+        window.panelsDataCache = {};
+
+        const loader = document.getElementById('loader');
+        const authScreen = document.getElementById('auth-screen');
+        const mainApp = document.getElementById('main-app');
+        
+        // --- UI UTILITIES ---
+        window.showLoader = () => loader.classList.remove('hidden');
+        window.hideLoader = () => loader.classList.add('hidden');
+        
+        window.showToast = (msg, type = 'success') => {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            let icon = 'fa-check-circle';
+            if(type === 'error') icon = 'fa-exclamation-circle';
+            if(type === 'warning') icon = 'fa-exclamation-triangle';
+            toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'slideUp 0.3s reverse forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        window.copyToClipboard = (elementId, itemName) => {
+            let text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(`${itemName} copied!`);
+            });
+        };
+
+        window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
+        window.openModal = (id) => document.getElementById(id).classList.remove('hidden');
+
+        // Auth Toggles
+        document.getElementById('go-to-signup').onclick = () => {
+            document.getElementById('login-box').classList.add('hidden');
+            document.getElementById('signup-box').classList.remove('hidden');
+        };
+        document.getElementById('go-to-login').onclick = () => {
+            document.getElementById('signup-box').classList.add('hidden');
+            document.getElementById('login-box').classList.remove('hidden');
+        };
+
+        function extractYouTubeID(url) {
+            if (!url) return null;
+            url = String(url).trim();
+            if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+            const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+            const match = url.match(regExp);
+            return (match && match[2].length === 11) ? match[2] : null;
+        }
+
+        // --- WALLET TABS LOGIC ---
+        window.switchWalletTab = (tab) => {
+            document.querySelectorAll('.wallet-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.wallet-section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(`tab-btn-${tab}`).classList.add('active');
+            if(tab === 'history') return navigate('history');
+            document.getElementById(`wallet-tab-${tab}`).classList.remove('hidden');
+        };
+
+        // --- AUTO PAYMENT VERIFICATION SYSTEM ---
+        let paymentPollInterval = null;
+
+        function startPaymentWatcher(orderId) {
+            if (paymentPollInterval) clearInterval(paymentPollInterval);
+            
+            if (!localStorage.getItem("pending_zap_order")) {
+                localStorage.setItem("pending_zap_order", orderId);
+                localStorage.setItem("pending_zap_time", Date.now());
+            }
+
+            paymentPollInterval = setInterval(() => {
+                const startTime = localStorage.getItem("pending_zap_time") || Date.now();
+                const elapsed = Date.now() - parseInt(startTime);
+                
+                if (elapsed > 300000) { // 5 mins
+                    clearInterval(paymentPollInterval);
+                    localStorage.removeItem("pending_zap_order");
+                    localStorage.removeItem("pending_zap_time");
+                    return;
+                }
+
+                if (!window.ZAP_KEY) return; 
+
+                ZapUPI.orderStatus({
+                    zap_key: window.ZAP_KEY,
+                    order_id: orderId
+                }, {
+                    onResponse: async function(oid, data) {
+                        if (data && data.data) {
+                            if (data.data.status === "Success") {
+                                clearInterval(paymentPollInterval);
+                                localStorage.removeItem("pending_zap_order");
+                                localStorage.removeItem("pending_zap_time");
+                                await processSuccessfulPayment(orderId, data.data);
+                            } else if (data.data.status === "Failed") {
+                                clearInterval(paymentPollInterval);
+                                localStorage.removeItem("pending_zap_order");
+                                localStorage.removeItem("pending_zap_time");
+                                await updatePaymentStatus(orderId, "failed");
+                                showToast("Payment Failed. Order: " + orderId, "error");
+                            }
+                        }
+                    },
+                    onError: function(err) {}
+                });
+            }, 5000); 
+        }
+
+        // --- ZAPUPI PAYMENT CALLBACKS ---
+        ZapUPI.setPaymentCallbacks({
+            onSuccess: async function(orderId) {
+                showToast("Payment Success! Processing funds...", "success");
+                if (!localStorage.getItem("pending_zap_order")) startPaymentWatcher(orderId);
+            },
+            onFailed: async function(orderId) {
+                showToast("Payment Failed. Order: " + orderId, "error");
+                await updatePaymentStatus(orderId, "failed");
+            },
+            onTimeout: async function(orderId) {
+                showToast("Payment Timed Out. Order: " + orderId, "warning");
+                await updatePaymentStatus(orderId, "failed");
+            }
+        });
+
+        async function processSuccessfulPayment(orderId, gatewayData) {
+            if(!currentUser) return;
+            const amount = parseFloat(gatewayData.amount);
+            const txRef = ref(db, `transactions/${currentUser.uid}/${orderId}`);
+            
+            const result = await runTransaction(txRef, (tx) => {
+                if (tx && tx.status === "pending") {
+                    tx.status = "success";
+                    tx.txn_id = gatewayData.txn_id;
+                    tx.utr = gatewayData.utr;
+                    return tx;
+                }
+                return undefined; 
+            });
+
+            if (result.committed) {
+                await runTransaction(ref(db, `users/${currentUser.uid}/balance`), (bal) => (bal || 0) + amount);
+                await update(ref(db, `gateway_payments/${orderId}`), { status: "approved", txn_id: gatewayData.txn_id, utr: gatewayData.utr });
+                showToast(`Successfully added ₹${amount} to your wallet!`, "success");
+                
+                await push(ref(db, `notifications/${currentUser.uid}`), {
+                    title: "Deposit Successful",
+                    message: `₹${amount} has been added to your wallet.`,
+                    type: "promo",
+                    date: new Date().toISOString()
+                });
+            }
+        }
+
+        async function updatePaymentStatus(orderId, newStatus) {
+            try {
+                await update(ref(db, `transactions/${currentUser.uid}/${orderId}`), { status: newStatus });
+                await update(ref(db, `gateway_payments/${orderId}`), { status: newStatus });
+            } catch(e) {}
+        }
+
+        // --- DEPOSITS ---
+        document.getElementById('btn-submit-payment').onclick = async () => {
+            const amt = document.getElementById('add-amount').value;
+            const phone = document.getElementById('add-phone').value.trim();
+            const btn = document.getElementById('btn-submit-payment');
+
+            if(!window.ZAP_KEY) return showToast("Gateway offline. Contact Admin.", "error");
+            if(!amt || amt <= 0) return showToast("Enter a valid deposit amount", "error");
+            if(!phone || phone.length < 10) return showToast("Enter a valid Phone Number", "error");
+
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> GENERATING...`;
+            btn.disabled = true;
+
+            const orderId = "ORD" + Date.now();
+
+            try {
+                await set(ref(db, `transactions/${currentUser.uid}/${orderId}`), { id: orderId, type: "deposit_auto", amount: parseFloat(amt), status: "pending", desc: "Gateway Deposit (ZapUPI)", date: new Date().toISOString() });
+                await set(ref(db, `gateway_payments/${orderId}`), { uid: currentUser.uid, email: currentUser.email, amount: parseFloat(amt), phone: phone, status: "pending", timestamp: serverTimestamp() });
+
+                ZapUPI.createOrder(
+                    { zap_key: window.ZAP_KEY, order_id: orderId, amount: amt, customer_mobile: phone, remark: currentUser.uid + " | AutoDeposit" },
+                    {
+                        onResponse: function(paymentUrl, returnedOrderId, data) {
+                            btn.innerHTML = `PAY INSTANTLY <i class="fas fa-arrow-right"></i>`;
+                            btn.disabled = false;
+                            startPaymentWatcher(orderId);
+                            ZapUPI.loadPayment(paymentUrl);
+                        },
+                        onError: function(err) {
+                            btn.innerHTML = `PAY INSTANTLY <i class="fas fa-arrow-right"></i>`;
+                            btn.disabled = false;
+                            showToast("ZapUPI Order Error: " + err, "error");
+                        }
+                    }
+                );
+            } catch(e) { btn.innerHTML = `PAY INSTANTLY <i class="fas fa-arrow-right"></i>`; btn.disabled = false; showToast("System Error. Try again.", "error"); }
+        };
+
+        document.getElementById('btn-check-status').onclick = () => {
+            const oid = document.getElementById('status-order-id').value.trim();
+            if(!oid) return showToast("Please enter an Order ID", "warning");
+            if(!window.ZAP_KEY) return showToast("Gateway offline", "error");
+
+            const btn = document.getElementById('btn-check-status');
+            const resultDiv = document.getElementById('status-result');
+            
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i>`;
+            btn.disabled = true;
+            resultDiv.classList.add('hidden');
+
+            ZapUPI.orderStatus(
+                { zap_key: window.ZAP_KEY, order_id: oid },
+                {
+                    onResponse: function(orderId, data) {
+                        btn.innerHTML = `VERIFY`; btn.disabled = false;
+                        let d = data.data;
+                        let statusColor = d.status === "Success" ? "var(--success)" : (d.status === "Failed" ? "var(--error)" : "var(--warning)");
+                        document.getElementById('res-oid').innerText = d.order_id;
+                        document.getElementById('res-status').innerText = d.status; document.getElementById('res-status').style.color = statusColor;
+                        document.getElementById('res-amount').innerText = `₹${d.amount}`;
+                        document.getElementById('res-date').innerText = d.create_at || '-';
+                        resultDiv.classList.remove('hidden');
+                    },
+                    onError: function(err) { btn.innerHTML = `VERIFY`; btn.disabled = false; showToast("Failed to fetch status: " + err, "error"); }
+                }
+            );
+        };
+
+        document.getElementById('btn-submit-manual').onclick = async () => {
+            const amt = document.getElementById('manual-amount').value;
+            const utr = document.getElementById('manual-utr').value.trim();
+            const appName = document.getElementById('manual-app').value.trim();
+            const screenshot = document.getElementById('manual-screenshot').value.trim();
+            const btn = document.getElementById('btn-submit-manual');
+
+            if(!amt || amt <= 0) return showToast("Enter a valid amount", "error");
+            if(!utr || utr.length < 8) return showToast("Enter a valid UTR number", "error");
+            if(!appName) return showToast("Enter Payment App Name", "error");
+
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> SUBMITTING...`; btn.disabled = true;
+            const txId = "MAN" + Date.now();
+
+            try {
+                await set(ref(db, `transactions/${currentUser.uid}/${txId}`), { id: txId, type: "deposit_manual", amount: parseFloat(amt), status: "pending", desc: `Manual Deposit via ${appName}`, utr: utr, date: new Date().toISOString() });
+                await set(ref(db, `manual_deposits/${txId}`), { uid: currentUser.uid, email: currentUser.email, amount: parseFloat(amt), utr: utr, app: appName, screenshot: screenshot, status: "pending", timestamp: serverTimestamp() });
+                showToast("Manual Deposit Submitted! Awaiting Admin Approval.");
+                ['manual-amount','manual-utr','manual-app','manual-screenshot'].forEach(id => document.getElementById(id).value = '');
+            } catch(e) { showToast("Error submitting request", "error"); } 
+            finally { btn.innerHTML = `<i class="fas fa-paper-plane"></i> SUBMIT REQUEST`; btn.disabled = false; }
+        };
+
+        window.submitCryptoDeposit = async () => {
+            const amt = document.getElementById('crypto-amount').value;
+            const hash = document.getElementById('crypto-hash').value.trim();
+            const screenshot = document.getElementById('crypto-screenshot').value.trim();
+            const note = document.getElementById('crypto-note').value.trim();
+            const btn = document.getElementById('btn-submit-crypto');
+
+            if(!amt || amt <= 0) return showToast("Enter a valid amount", "error");
+            if(!hash || hash.length < 10) return showToast("Enter a valid Transaction Hash", "error");
+            if(!screenshot) return showToast("Screenshot URL is required", "error");
+
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> SUBMITTING...`; btn.disabled = true;
+            const txId = "CRY" + Date.now();
+
+            try {
+                await set(ref(db, `transactions/${currentUser.uid}/${txId}`), { id: txId, type: "deposit_crypto", amount: parseFloat(amt), status: "pending", desc: `Crypto Deposit (USDT)`, hash: hash, date: new Date().toISOString() });
+                await set(ref(db, `crypto_deposits/${txId}`), { uid: currentUser.uid, email: currentUser.email, amount: parseFloat(amt), hash: hash, screenshot: screenshot, note: note, status: "pending", timestamp: serverTimestamp() });
+                showToast("Crypto Deposit Submitted! Awaiting Admin Approval.");
+                ['crypto-amount','crypto-hash','crypto-screenshot','crypto-note'].forEach(id => document.getElementById(id).value = '');
+                closeModal('modal-crypto-deposit');
+            } catch(e) { showToast("Error submitting request", "error"); } 
+            finally { btn.innerHTML = `SUBMIT`; btn.disabled = false; }
+        };
+
+        // --- DYNAMIC DATA ---
+        function initContactLinks() {
+            onValue(ref(db, 'support_links'), (snap) => {
+                let data = snap.val();
+                if(data) {
+                    const waLink = data.whatsapp || '#';
+                    const tgLogin = data.telegram_login || '#';
+                    const tgDash = data.telegram_dashboard || '#';
+                    document.getElementById('auth-wa-link').href = waLink;
+                    document.getElementById('auth-wa-link-2').href = waLink;
+                    document.getElementById('auth-tg-link').href = tgLogin;
+                    document.getElementById('auth-tg-link-2').href = tgLogin;
+                    const globalBtn = document.getElementById('global-telegram-btn');
+                    globalBtn.href = tgDash; globalBtn.style.display = tgDash === '#' ? 'none' : 'flex';
+                    document.getElementById('support-wa-btn').href = waLink;
+                    document.getElementById('support-tg-btn').href = tgDash !== '#' ? tgDash : tgLogin;
+                }
+            });
+        }
+        initContactLinks();
+
+        function initBranding(){
+            onValue(ref(db, 'settings/branding'), (snap)=>{
+                const data = snap.val();
+                if(!data) return;
+                if(data.name){ document.getElementById('site-name').innerText = data.name; document.getElementById('site-name').style.display = "inline-block"; document.title = data.name + " | PREMIUM"; }
+                if(data.logo && data.logo.length > 5){ const logo = document.getElementById('site-logo'); logo.src = data.logo; logo.style.display = "inline-block"; }
+            });
+        }
+        initBranding();
+
+        function fetchDepositSettings() {
+            onValue(ref(db, 'settings/payment'), (snap) => {
+                if(snap.exists()) {
+                    let data = snap.val();
+                    window.ZAP_KEY = data.zap_key || "";
+                    document.getElementById('manual-upi-display').innerText = data.upiId || "Not Set";
+                    const manualQrImg = document.getElementById('manual-qr-display');
+                    const manualQrDl = document.getElementById('manual-qr-download');
+                    if(data.qrImage) { manualQrImg.src = data.qrImage; manualQrImg.style.display = 'block'; manualQrDl.href = data.qrImage; manualQrDl.style.display = 'inline-flex'; } 
+                    else { manualQrImg.style.display = 'none'; manualQrDl.style.display = 'none'; }
+                }
+            });
+
+            onValue(ref(db, 'deposit_settings'), (snap) => {
+                if(snap.exists()) {
+                    let data = snap.val();
+                    document.getElementById('crypto-payid-display').innerText = data.binance_pay_id || "Not Set";
+                    document.getElementById('crypto-address-display').innerText = data.usdt_address || "Not Set";
+                    document.getElementById('crypto-rate').innerText = data.crypto_rate || "88.00";
+                    const cryptoQrImg = document.getElementById('crypto-qr-display');
+                    const cryptoQrDl = document.getElementById('crypto-qr-download');
+                    if(data.crypto_qr) { cryptoQrImg.src = data.crypto_qr; cryptoQrImg.style.display = 'block'; cryptoQrDl.href = data.crypto_qr; cryptoQrDl.style.display = 'inline-flex'; } 
+                    else { cryptoQrImg.style.display = 'none'; cryptoQrDl.style.display = 'none'; }
+                }
+            });
+        }
+
+        let autoScrollInterval;
+        function initPromotions() {
+            onValue(ref(db, 'promotions'), (snapshot) => {
+                let container = document.getElementById('promo-container');
+                let promotions = [];
+                if (snapshot.exists()) snapshot.forEach(child => promotions.push({ id: child.key, ...child.val() }));
+                
+                let activePromos = promotions.filter(p => p.status === true || p.status === "true");
+                if (activePromos.length === 0) { container.classList.add('hidden'); return; }
+                
+                container.classList.remove('hidden'); container.innerHTML = '';
+                
+                activePromos.forEach(p => {
+                    let linkAction = p.link ? `onclick="window.open('${p.link}', '_blank')"` : '';
+                    let imgHTML = p.image ? `<img src="${p.image}" alt="${p.title}" onerror="this.src=''; this.style.display='none'; this.parentElement.innerHTML+='<div style=\\'width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; color:var(--text-muted);\\'>Image Unavailable</div>';">` : '<div style="width:100%; height:100%; background:rgba(0,0,0,0.5);"></div>';
+                    container.innerHTML += `<div class="promo-card glass" ${linkAction}>${imgHTML}<div class="promo-overlay"><div class="promo-title">${p.title || 'Special Promotion'}</div></div></div>`;
+                });
+                
+                clearInterval(autoScrollInterval);
+                if(container.scrollWidth <= container.clientWidth) return;
+                let isPaused = false;
+                autoScrollInterval = setInterval(() => {
+                    if(isPaused) return;
+                    const cardWidth = container.querySelector('.promo-card').clientWidth + 15;
+                    if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 10) { container.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { container.scrollBy({ left: cardWidth, behavior: 'smooth' }); }
+                }, 3500);
+                container.addEventListener('mouseenter', () => isPaused = true);
+                container.addEventListener('mouseleave', () => isPaused = false);
+                container.addEventListener('touchstart', () => isPaused = true, {passive: true});
+                container.addEventListener('touchend', () => setTimeout(() => isPaused = false, 2000), {passive: true});
+            });
+        }
+
+        function initMarquee() {
+            onValue(ref(db, 'settings/marquee'), (snap) => {
+                const data = snap.val();
+                const container = document.getElementById('announcement-marquee');
+                const textEl = document.getElementById('marquee-text');
+                if (data && data.enabled) {
+                    container.classList.remove('hidden');
+                    textEl.innerHTML = data.text || "<span>Welcome to Premium Store!</span>";
+                    textEl.setAttribute('scrollamount', data.speed || "5");
+                    document.querySelectorAll('.page-content').forEach(el => el.style.paddingTop = '130px');
+                } else {
+                    container.classList.add('hidden');
+                    document.querySelectorAll('.page-content').forEach(el => el.style.paddingTop = '100px');
+                }
+            });
+        }
+
+        // --- AUTHENTICATION STATE & INITIALIZATION ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                authScreen.classList.add('hidden');
+                mainApp.style.display = 'block';
+                
+                initUserData();
+                fetchDepositSettings();
+                initPromotions();
+                initMarquee();
+                fetchPurchases(); 
+                fetchTopSellers(); 
+                fetchTopPricing();
+                navigate('dashboard'); 
+                
+                // Track key stock changes live globally
+                onValue(ref(db, 'keyStocks'), (snap) => {
+                    window.keyStocksCache = snap.val() || {};
+                    window.updateAllPanelStocks(); 
+                });
+
+                // Track panels
+                onValue(ref(db, 'panels'), (snapshot) => {
+                    const container = document.getElementById('panels-container');
+                    if (!snapshot.exists()) {
+                        container.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>No premium panels available currently.</p></div>`;
+                        window.panelsDataCache = {};
+                        return;
+                    }
+                    window.panelsDataCache = snapshot.val();
+                    renderPanels();
+                });
+                
+                const pendingOrder = localStorage.getItem("pending_zap_order");
+                if (pendingOrder) setTimeout(() => { startPaymentWatcher(pendingOrder); }, 2000);
+                
+            } else {
+                currentUser = null;
+                mainApp.style.display = 'none';
+                authScreen.classList.remove('hidden');
+                hideLoader();
+                if (paymentPollInterval) clearInterval(paymentPollInterval);
+            }
+        });
+
+        document.getElementById('btn-signup').onclick = async () => {
+            const email = document.getElementById('signup-email').value.trim();
+            const pass = document.getElementById('signup-pass').value;
+            const referralCode = document.getElementById('signup-referral').value.trim().toUpperCase();
+            const btn = document.getElementById('btn-signup');
+
+            if(!email || pass.length < 6) return showToast("Invalid email or password (<6 chars)", "error");
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Loading...`; btn.disabled = true; showLoader();
+            
+            try {
+                let parentUid = null;
+                if (referralCode) {
+                    const refSnap = await get(ref(db, `referral_codes/${referralCode}`));
+                    if (!refSnap.exists()) {
+                        throw new Error("Invalid Referral Code!");
+                    }
+                    parentUid = refSnap.val();
+                }
+
+                const cred = await createUserWithEmailAndPassword(auth, email, pass);
+                const myReferralCode = "REF-" + Math.random().toString(36).substring(2,8).toUpperCase();
+                
+                await set(ref(db, `users/${cred.user.uid}`), { 
+                    email: email, 
+                    balance: 0, 
+                    createdAt: serverTimestamp(), 
+                    status: 'active', 
+                    role: 'user',
+                    name: email.split('@')[0],
+                    referralCode: myReferralCode,
+                    parentResellerUid: parentUid || null,
+                    joinedByReferral: !!parentUid
+                });
+                await set(ref(db, `referral_codes/${myReferralCode}`), cred.user.uid);
+
+                if (parentUid) {
+                    await set(ref(db, `referrals/${parentUid}/${cred.user.uid}`), {
+                        email: email,
+                        joinDate: new Date().toISOString(),
+                        status: 'active',
+                        purchases: 0,
+                        earningsGenerated: 0
+                    });
+                    await push(ref(db, `notifications/${parentUid}`), {
+                        title: "New Referral Joined!",
+                        message: `${email} joined using your code.`,
+                        type: "promo",
+                        date: new Date().toISOString()
+                    });
+                }
+
+                showToast("Account Created Successfully!");
+            } catch (error) { 
+                showToast(error.message, "error"); 
+            } 
+            finally { btn.innerHTML = `<i class="fas fa-user-plus"></i> Sign Up`; btn.disabled = false; hideLoader(); }
+        };
+
+        document.getElementById('btn-login').onclick = async () => {
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value;
+            const btn = document.getElementById('btn-login');
+
+            if(!email || !pass) return showToast("Enter email and password", "error");
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Loading...`; btn.disabled = true; showLoader();
+
+            try { await signInWithEmailAndPassword(auth, email, pass); showToast("Welcome back!"); } 
+            catch (error) { showToast("Invalid Credentials", "error"); } 
+            finally { btn.innerHTML = `<i class="fas fa-sign-in-alt"></i> Secure Login`; btn.disabled = false; hideLoader(); }
+        };
+
+        document.getElementById('btn-logout').onclick = async () => {
+            showLoader(); try { await signOut(auth); document.getElementById('dropdown-menu').classList.remove('active'); } catch(e) { console.error(e); }
+        };
+
+        // --- DASHBOARD: TOP SELLERS & TOP PRICING ---
+        async function fetchTopSellers() {
+            try {
+                const usersSnap = await get(ref(db, 'users'));
+                const purchasesSnap = await get(ref(db, 'purchases'));
+                
+                let sellers = [];
+                if (usersSnap.exists() && purchasesSnap.exists()) {
+                    const usersData = usersSnap.val();
+                    const purchasesData = purchasesSnap.val();
+                    
+                    for (let uid in usersData) {
+                        let user = usersData[uid];
+                        let userPurchases = purchasesData[uid] || {};
+                        let keysCount = 0;
+                        let spent = 0;
+                        
+                        for (let pid in userPurchases) {
+                            if (userPurchases[pid].status !== 'refunded') {
+                                keysCount++;
+                                spent += parseFloat(userPurchases[pid].price || 0);
+                            }
+                        }
+                        
+                        if (keysCount > 0) {
+                            sellers.push({
+                                email: user.email || 'Hidden',
+                                keys: keysCount,
+                                spent: spent,
+                                role: user.role || 'user'
+                            });
+                        }
+                    }
+                    
+                    sellers.sort((a,b) => b.spent - a.spent);
+                    const tbody = document.getElementById('dash-top-sellers');
+                    tbody.innerHTML = '';
+                    
+                    if (sellers.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No data available</td></tr>`;
+                        return;
+                    }
+                    
+                    sellers.slice(0, 10).forEach((s, index) => {
+                        let rankClass = index === 0 ? 'rank-1' : (index === 1 ? 'rank-2' : (index === 2 ? 'rank-3' : ''));
+                        let roleBadge = s.role === 'reseller' ? `<span style="color:var(--neon-cyan);"><i class="fas fa-user-tie"></i> Reseller</span>` : `<span style="color:var(--text-muted);"><i class="fas fa-user"></i> User</span>`;
+                        let emailMasked = s.email.replace(/(.{2})(.*)(?=@)/, (gp1, gp2, gp3) => gp2 + gp3.replace(/./g, '*'));
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td><span class="rank-badge ${rankClass}">#${index + 1}</span></td>
+                                <td>${emailMasked}</td>
+                                <td>${s.keys}</td>
+                                <td style="color:var(--success); font-weight:bold;">₹${s.spent.toFixed(2)}</td>
+                                <td>${roleBadge}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    document.getElementById('dash-top-sellers').innerHTML = `<tr><td colspan="5" style="text-align:center;">No data available</td></tr>`;
+                }
+            } catch (error) {
+                console.log("Top Sellers access restricted. Falling back to self view.");
+                let roleBadge = userData.role === 'reseller' ? `<span style="color:var(--neon-cyan);"><i class="fas fa-user-tie"></i> Reseller</span>` : `<span style="color:var(--text-muted);"><i class="fas fa-user"></i> User</span>`;
+                let spent = document.getElementById('prof-spent').innerText;
+                let keys = document.getElementById('prof-purchases').innerText;
+                let emailMasked = userData.email ? userData.email.replace(/(.{2})(.*)(?=@)/, (gp1, gp2, gp3) => gp2 + gp3.replace(/./g, '*')) : 'User';
+                
+                document.getElementById('dash-top-sellers').innerHTML = `
+                    <tr>
+                        <td><span class="rank-badge rank-1">#1</span></td>
+                        <td>${emailMasked}</td>
+                        <td>${keys}</td>
+                        <td style="color:var(--success); font-weight:bold;">₹${spent}</td>
+                        <td>${roleBadge}</td>
+                    </tr>
+                `;
+            }
+        }
+
+        function fetchTopPricing() {
+            onValue(ref(db, 'top_pricing'), (snap) => {
+                const tbody = document.getElementById('dash-top-pricing');
+                if (!snap.exists()) {
+                    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;">No data available</td></tr>`;
+                    return;
+                }
+                let data = [];
+                snap.forEach(child => data.push(child.val()));
+                data.sort((a,b) => b.price - a.price);
+                
+                tbody.innerHTML = '';
+                data.forEach((item, index) => {
+                    let rankMedal = index === 0 ? '🥇' : (index === 1 ? '🥈' : (index === 2 ? '🥉' : '🏅'));
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${rankMedal} ${index + 1}</td>
+                            <td>${item.title}</td>
+                            <td style="color:var(--success); font-weight:bold;">₹${item.price}</td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        // --- NEW PAGES FUNCTIONS ---
+        function fetchMyReferrals() {
+            onValue(ref(db, `referrals/${currentUser.uid}`), (snap) => {
+                const tbody = document.getElementById('referrals-tbody');
+                if(!snap.exists()) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No referrals found</td></tr>';
+                    document.getElementById('reseller-team-count').innerText = 0;
+                    return;
+                }
+                let html = '';
+                let count = 0;
+                let totalSales = 0;
+                snap.forEach(child => {
+                    count++;
+                    const u = child.val();
+                    let dateStr = u.joinDate ? new Date(u.joinDate).toLocaleDateString() : '-';
+                    let earnings = u.earningsGenerated || 0;
+                    let purchases = u.purchases || 0;
+                    totalSales += (earnings * 10); // reverse calc 10%
+                    
+                    html += `<tr class="ref-row" data-search="${u.email.toLowerCase()}">
+                        <td>${u.email}</td>
+                        <td>${dateStr}</td>
+                        <td>${u.status === 'active' ? '<span style="color:var(--success);">Active</span>' : '<span style="color:var(--error);">Inactive</span>'}</td>
+                        <td>${purchases}</td>
+                        <td style="color:var(--success);">₹${earnings.toFixed(2)}</td>
+                    </tr>`;
+                });
+                tbody.innerHTML = html;
+                document.getElementById('reseller-team-count').innerText = count;
+                if(document.getElementById('reseller-total-sales')) document.getElementById('reseller-total-sales').innerText = `₹${totalSales.toFixed(2)}`;
+            });
+        }
+
+        function fetchCommissions() {
+            onValue(ref(db, `commissions/${currentUser.uid}`), (snap) => {
+                const tbody = document.getElementById('commissions-tbody');
+                let total = 0;
+                let html = '';
+                if(snap.exists()) {
+                    let dataArr = [];
+                    snap.forEach(child => dataArr.push(child.val()));
+                    dataArr.sort((a,b) => new Date(b.date) - new Date(a.date));
+                    dataArr.forEach(c => {
+                        total += parseFloat(c.amount);
+                        html += `<tr class="comm-row" data-search="${c.plan.toLowerCase()} ${c.fromEmail.toLowerCase()}">
+                            <td>${new Date(c.date).toLocaleDateString()}</td>
+                            <td>${c.plan}</td>
+                            <td>${c.fromEmail}</td>
+                            <td style="color:var(--success); font-weight: bold;">₹${c.amount.toFixed(2)}</td>
+                            <td><span style="color:var(--success);"><i class="fas fa-check"></i> Credited</span></td>
+                        </tr>`;
+                    });
+                }
+                if(html === '') html = '<tr><td colspan="5" style="text-align:center;">No commissions yet</td></tr>';
+                tbody.innerHTML = html;
+                document.getElementById('total-comm-counter').innerText = total.toFixed(2);
+                
+                if(document.getElementById('reseller-total-comm')) document.getElementById('reseller-total-comm').innerText = `₹${total.toFixed(2)}`;
+            });
+        }
+
+        function fetchNotifications() {
+            const container = document.getElementById('notifications-container');
+            let notifs = [];
+            
+            const renderNotifs = () => {
+                container.innerHTML = '';
+                if(notifs.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><p>No new notifications</p></div>';
+                    return;
+                }
+                notifs.sort((a,b) => new Date(b.date) - new Date(a.date));
+                notifs.forEach(n => {
+                    let typeClass = n.type === 'alert' ? 'alert' : (n.type === 'promo' ? 'promo' : '');
+                    let icon = n.type === 'alert' ? 'fa-exclamation-triangle' : (n.type === 'promo' ? 'fa-gift' : 'fa-bell');
+                    container.innerHTML += `
+                        <div class="notif-card ${typeClass}">
+                            <i class="fas ${icon} notif-icon"></i>
+                            <div class="notif-content">
+                                <h4>${n.title}</h4>
+                                <p>${n.message}</p>
+                                <span class="notif-time">${new Date(n.date).toLocaleString()}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            };
+
+            get(ref(db, 'notifications/global')).then(snap => {
+                if(snap.exists()) snap.forEach(c => notifs.push(c.val()));
+                get(ref(db, `notifications/${currentUser.uid}`)).then(snap2 => {
+                    if(snap2.exists()) snap2.forEach(c => notifs.push(c.val()));
+                    renderNotifs();
+                });
+            });
+        }
+
+        // --- USER DATA & RESELLER SYSTEM ---
+        function initUserData() {
+            onValue(ref(db, `users/${currentUser.uid}`), async (snapshot) => {
+                if (snapshot.exists()) {
+                    userData = snapshot.val();
+                    
+                    if(userData.status === "banned") { signOut(auth); alert("Your account is banned."); return; }
+
+                    if (!userData.referralCode) {
+                        const newCode = "REF-" + Math.random().toString(36).substring(2,8).toUpperCase();
+                        await update(ref(db, `users/${currentUser.uid}`), { referralCode: newCode });
+                        await set(ref(db, `referral_codes/${newCode}`), currentUser.uid);
+                        userData.referralCode = newCode;
+                    }
+
+                    // Reseller Logic
+                    window.isReseller = (userData.role === 'reseller');
+                    if(window.isReseller) {
+                        document.getElementById('reseller-badge-container').style.display = 'flex';
+                        document.getElementById('menu-reseller').classList.remove('hidden');
+                        if(document.getElementById('navbar-reseller-badge')) document.getElementById('navbar-reseller-badge').style.display = 'inline-flex';
+                        document.getElementById('prof-profit-container').style.display = 'flex';
+                        fetchMyReferrals();
+                        fetchCommissions();
+                    } else {
+                        document.getElementById('reseller-badge-container').style.display = 'none';
+                        document.getElementById('menu-reseller').classList.add('hidden');
+                        if(document.getElementById('navbar-reseller-badge')) document.getElementById('navbar-reseller-badge').style.display = 'none';
+                        document.getElementById('prof-profit-container').style.display = 'none';
+                    }
+
+                    const bal = parseFloat(userData.balance || 0).toFixed(2);
+                    document.getElementById('nav-balance').innerText = bal;
+                    document.getElementById('prof-bal').innerText = bal;
+                    document.getElementById('wallet-stat-bal').innerText = `₹${bal}`;
+                    document.getElementById('dash-stat-bal').innerText = `₹${bal}`;
+                    document.getElementById('prof-email').innerText = userData.email;
+                    
+                    document.getElementById('prof-name').innerText = userData.name || userData.email.split('@')[0];
+                    document.getElementById('prof-uid').innerText = currentUser.uid;
+                    document.getElementById('prof-ref-code').innerText = userData.referralCode || "N/A";
+                    document.getElementById('reseller-code-display').innerText = userData.referralCode || "N/A";
+                    if(document.getElementById('reseller-avail-bal')) document.getElementById('reseller-avail-bal').innerText = `₹${bal}`;
+
+                    document.getElementById('dash-stat-role').innerText = window.isReseller ? "RESELLER" : "USER";
+                    document.getElementById('dash-stat-role').style.color = window.isReseller ? "var(--neon-cyan)" : "white";
+                    
+                    if(userData.createdAt) {
+                        document.getElementById('prof-date').innerText = new Date(userData.createdAt).toLocaleDateString();
+                    }
+                    window.updateAllPanelStocks(); 
+                }
+                hideLoader();
+            });
+
+            onValue(ref(db, `transactions/${currentUser.uid}`), (snapshot) => {
+                let totalDep = 0; let todayDep = 0; let pendingDep = 0; let totalSpent = 0;
+                const today = new Date().toLocaleDateString();
+
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const tx = child.val();
+                        const txDate = new Date(tx.date).toLocaleDateString();
+                        if(tx.type.includes('deposit')) {
+                            if(tx.status === 'success') { totalDep += parseFloat(tx.amount); if(txDate === today) todayDep += parseFloat(tx.amount); } 
+                            else if(tx.status === 'pending') { pendingDep += parseFloat(tx.amount); }
+                        }
+                        if(tx.status === 'success' && tx.type === 'purchase') { totalSpent += parseFloat(tx.amount); }
+                    });
+                }
+                document.getElementById('wallet-stat-dep').innerText = `₹${totalDep.toFixed(2)}`;
+                document.getElementById('wallet-stat-today').innerText = `₹${todayDep.toFixed(2)}`;
+                document.getElementById('wallet-stat-pending').innerText = `₹${pendingDep.toFixed(2)}`;
+                document.getElementById('prof-spent').innerText = totalSpent.toFixed(2);
+                document.getElementById('dash-stat-spent').innerText = `₹${totalSpent.toFixed(2)}`;
+            });
+        }
+
+        window.navigate = (pageId) => {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            document.getElementById(`page-${pageId}`).classList.remove('hidden');
+            document.getElementById('dropdown-menu').classList.remove('active');
+            
+            if(pageId === 'home') document.getElementById('search-input').value = ''; 
+            if(pageId === 'history' || pageId === 'purchase-history') fetchPurchases();
+            if(pageId === 'wallet') switchWalletTab('auto');
+            if(pageId === 'dashboard') { fetchPurchases(); fetchTopSellers(); }
+            if(pageId === 'notifications') fetchNotifications();
+            if(pageId === 'referrals') fetchMyReferrals();
+            if(pageId === 'commissions') fetchCommissions();
+            
+            window.scrollTo(0,0);
+        };
+
+        document.getElementById('menu-toggle').onclick = () => document.getElementById('dropdown-menu').classList.toggle('active');
+
+        // PROFILE ENHANCEMENTS
+        window.editProfileName = async () => {
+            const newName = prompt("Enter your new name:", userData.name || "");
+            if(newName && newName.trim() !== "") {
+                await update(ref(db, `users/${currentUser.uid}`), { name: newName.trim() });
+                showToast("Profile name updated!");
+            }
+        };
+
+        window.resetPassword = async () => {
+            if(confirm("Send password reset email to your registered email address?")) {
+                try {
+                    await sendPasswordResetEmail(auth, userData.email);
+                    showToast("Password reset email sent! Check your inbox.");
+                } catch(e) {
+                    showToast("Failed to send reset email: " + e.message, "error");
+                }
+            }
+        };
+
+        window.shareReferralCode = () => {
+            const text = `Join Premium Store using my referral code: ${userData.referralCode} and get amazing benefits!`;
+            if (navigator.share) {
+                navigator.share({ title: 'Join Us', text: text });
+            } else {
+                copyToClipboard('reseller-code-display', 'Referral Code');
+                showToast("Code copied to clipboard!");
+            }
+        };
+
+        // --- RENDER PANELS (SMART STOCK HANDLING & PRICE LIST) ---
+        function renderPanels() {
+            const container = document.getElementById('panels-container');
+            container.innerHTML = '';
+            const panels = window.panelsDataCache;
+
+            for (let panelId in panels) {
+                const p = panels[panelId];
+                if(p.status !== 'active') continue; 
+                
+                let descText = p.description || 'Premium injection tool';
+                let featuresArr = descText.split(/\n|-/).filter(f => f.trim().length > 0);
+                let featuresHtml = featuresArr.map(f => `<span class="feature-chip"><i class="fas fa-bolt"></i> ${f.trim()}</span>`).join('');
+
+                let updateLink = p.link ? `window.open('${p.link}', '_blank')` : "showToast('File link not available', 'warning')";
+                let feedbackBtn = p.feedback && p.feedback.trim() !== '' 
+                    ? `<button class="btn-outline feedback-btn" onclick="window.open('${p.feedback}', '_blank')"><i class="fas fa-star"></i> FEEDBACK</button>` : '';
+
+                const ytID = extractYouTubeID(p.youtube);
+                let videoRenderHtml = ytID ? `
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/${ytID}?autoplay=1&mute=1&rel=0&modestbranding=1" allowfullscreen></iframe>
+                        </div>` : `
+                        <div class="video-wrapper">
+                            <div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;background:rgba(20,24,34,0.8);border-bottom:2px solid rgba(255,42,95,0.2);">
+                                <i class="fas fa-video-slash" style="font-size:32px;color:var(--error);margin-bottom:10px;text-shadow:0 0 10px rgba(255,42,95,0.5);"></i>
+                                <span style="color:var(--text-muted);font-weight:600;letter-spacing:1px;font-size:13px;text-transform:uppercase;">Video Unavailable</span>
+                            </div>
+                        </div>`;
+
+                const card = document.createElement('div');
+                card.className = 'panel-card';
+                card.setAttribute('data-search', `${p.name.toLowerCase()} ${descText.toLowerCase()}`);
+                
+                card.innerHTML = `
+                    ${videoRenderHtml}
+                    <div class="panel-info">
+                        <div class="panel-title">${p.name}</div>
+                        <div class="features-list">${featuresHtml}</div>
+                        <div class="trust-badges">
+                            <span class="badge-item"><i class="fas fa-shield-alt"></i> Safe Payments</span>
+                            <span id="badge-stock-${panelId}" class="badge-item"><i class="fas fa-circle-notch fa-spin"></i> Checking Stock...</span>
+                        </div>
+                        <div class="btn-grid">
+                            <button class="btn-outline" onclick="${updateLink}"><i class="fas fa-file-download"></i> UPDATE</button>
+                            ${feedbackBtn}
+                        </div>
+                        <select class="plan-select" id="plan-${panelId}" onchange="window.handlePlanChange('${panelId}')" style="display: none;"></select>
+                        <button id="btn-buy-${panelId}" class="btn btn-purchase premium-btn" onclick="window.togglePriceList('${panelId}', '${p.name.replace(/'/g, "\\'")}', '${p.link || ''}')" style="width: 100%;">
+                            <i class="fas fa-shopping-cart"></i> PURCHASE KEY
+                        </button>
+                        <div id="price-list-${panelId}" class="price-list-container"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+            window.updateAllPanelStocks();
+            document.getElementById('search-input').dispatchEvent(new Event('input'));
+        }
+
+        window.updateAllPanelStocks = () => {
+            for(let panelId in window.panelsDataCache) {
+                const selectEl = document.getElementById(`plan-${panelId}`);
+                if(!selectEl) continue;
+                
+                const p = window.panelsDataCache[panelId];
+                if(p.plans) {
+                    const currentVal = selectEl.value ? JSON.parse(selectEl.value).key : null;
+                    selectEl.innerHTML = '';
+                    const sortedPlans = Object.entries(p.plans).sort((a,b) => a[1].price - b[1].price);
+                    
+                    sortedPlans.forEach(([planKey, planData]) => {
+                        let finalPrice = window.isReseller ? (planData.resellerPrice !== undefined ? planData.resellerPrice : planData.price) : planData.price;
+                        let stockCount = 0;
+                        if(window.keyStocksCache && window.keyStocksCache[panelId] && window.keyStocksCache[panelId][planKey]) {
+                            const keys = Object.values(window.keyStocksCache[panelId][planKey]);
+                            stockCount = keys.filter(k => !k.used).length;
+                        }
+                        
+                        let labelText = planData.label || `${planData.days} Days`;
+                        let stockText = stockCount > 0 ? `(Stock: ${stockCount})` : `(Available)`;
+                        let optionText = `${labelText} - ₹${finalPrice} ${stockText}`;
+                        
+                        let opt = document.createElement('option');
+                        opt.value = JSON.stringify({key: planKey, label: labelText, price: finalPrice, stock: stockCount, origPrice: planData.price});
+                        opt.innerHTML = optionText;
+                        if(planKey === currentVal) opt.selected = true;
+                        selectEl.appendChild(opt);
+                    });
+                    if(selectEl.options.length === 0) {
+                        selectEl.innerHTML = `<option value="">No Plans Available</option>`;
+                    }
+                    window.handlePlanChange(panelId);
+                }
+            }
+        };
+
+        window.handlePlanChange = (panelId) => {
+            const selectEl = document.getElementById(`plan-${panelId}`);
+            if(!selectEl || selectEl.options.length === 0 || !selectEl.value) return;
+            const data = JSON.parse(selectEl.value);
+            
+            const btn = document.getElementById(`btn-buy-${panelId}`);
+            const badge = document.getElementById(`badge-stock-${panelId}`);
+            
+            btn.disabled = false;
+            
+            if(badge) { 
+                badge.className = 'badge-item'; 
+                badge.style.color = 'var(--success)'; 
+                badge.innerHTML = `<i class="fas fa-check-circle"></i> Available`; 
+            }
+        };
+
+        window.togglePriceList = (panelId, panelName, link) => {
+            const container = document.getElementById(`price-list-${panelId}`);
+            const isCurrentlyShown = container.classList.contains('show');
+
+            // Close all currently open price lists smoothly
+            document.querySelectorAll('.price-list-container').forEach(el => {
+                el.classList.remove('show');
+            });
+
+            // Toggle current price list
+            if (!isCurrentlyShown) {
+                container.classList.remove('hidden'); // Fallback to ensure it's not strictly hidden
+                const p = window.panelsDataCache[panelId];
+                container.innerHTML = '';
+                
+                if(p && p.plans) {
+                    const sortedPlans = Object.entries(p.plans).sort((a,b) => a[1].price - b[1].price);
+                    sortedPlans.forEach(([planKey, planData]) => {
+                        let finalPrice = window.isReseller ? (planData.resellerPrice !== undefined ? planData.resellerPrice : planData.price) : planData.price;
+                        let labelText = planData.label || `${planData.days} Days`;
+                        if(labelText === 'undefined Days') labelText = 'Premium Plan';
+
+                        const row = document.createElement('div');
+                        row.className = 'price-list-item';
+                        row.innerHTML = `
+                            <div style="color:white; font-weight:800; font-size:13px; text-transform:uppercase; letter-spacing:0.5px;">
+                                ${labelText} <br/>
+                                <span style="color:#ff3b3b; font-size: 15px; display:inline-block; margin-top:3px;">₹${finalPrice}</span>
+                            </div>
+                            <button class="btn-red-buy" onclick="window.executeFromPriceList('${panelId}', '${panelName.replace(/'/g, "\\'")}', '${link}', '${planKey}', ${finalPrice}, '${labelText}', ${planData.price})">BUY</button>
+                        `;
+                        container.appendChild(row);
+                    });
+                } else {
+                    container.innerHTML = '<div style="color:var(--text-muted); font-size:13px; text-align:center; padding:15px;">No plans available.</div>';
+                }
+                
+                // Allow innerHTML to parse before animating max-height
+                setTimeout(() => {
+                    container.classList.add('show');
+                }, 10);
+            }
+        };
+
+        window.executeFromPriceList = (panelId, panelName, link, planKey, finalPrice, labelText, origPrice) => {
+            window.currentCheckout = {
+                panelId: panelId, panelName: panelName, link: link,
+                planKey: planKey, label: labelText,
+                originalPrice: parseFloat(origPrice), 
+                finalPrice: parseFloat(finalPrice)
+            };
+            window.appliedCoupon = null;
+
+            document.getElementById('chk-panel-name').innerText = panelName;
+            document.getElementById('chk-plan-label').innerText = labelText;
+            document.getElementById('chk-orig-price').innerText = origPrice.toFixed(2);
+            document.getElementById('chk-final-price').innerText = finalPrice.toFixed(2);
+            document.getElementById('chk-coupon-input').value = '';
+            document.getElementById('chk-strike-price').classList.add('hidden');
+            document.getElementById('chk-discount-badge').classList.add('hidden');
+            
+            openModal('modal-checkout');
+        };
+
+        // --- SMART SEARCH SYSTEM & NEW SEARCHES ---
+        let searchTimeout;
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            const icon = document.getElementById('search-icon');
+            const loader = document.getElementById('search-loader');
+            icon.style.display = 'none'; loader.style.display = 'block';
+            clearTimeout(searchTimeout);
+
+            searchTimeout = setTimeout(() => {
+                const term = e.target.value.toLowerCase().trim();
+                const cards = document.querySelectorAll('.panel-card');
+                let visibleCount = 0;
+                cards.forEach(card => {
+                    if(card.getAttribute('data-search').includes(term)) { card.style.display = 'flex'; visibleCount++; } 
+                    else { card.style.display = 'none'; }
+                });
+                document.getElementById('search-empty').classList.toggle('hidden', visibleCount !== 0 || cards.length === 0);
+                loader.style.display = 'none'; icon.style.display = 'block';
+            }, 300);
+        });
+
+        document.getElementById('search-referrals').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.ref-row').forEach(row => { row.style.display = row.getAttribute('data-search').includes(term) ? '' : 'none'; });
+        });
+        document.getElementById('search-commissions').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.comm-row').forEach(row => { row.style.display = row.getAttribute('data-search').includes(term) ? '' : 'none'; });
+        });
+        document.getElementById('search-phistory').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.phistory-row').forEach(row => { row.style.display = row.getAttribute('data-search').includes(term) ? '' : 'none'; });
+        });
+
+        // --- CHECKOUT & TRANSACTION SYSTEM ---
+        window.currentCheckout = {};
+        window.appliedCoupon = null;
+
+        // Note: handlePurchaseClick kept for structural preservation if used elsewhere
+        window.handlePurchaseClick = (panelId, panelName, link) => {
+            const selectEl = document.getElementById(`plan-${panelId}`);
+            if(!selectEl) return showToast('No plans available for this panel', 'error');
+            const planData = JSON.parse(selectEl.value);
+            window.executeFromPriceList(panelId, panelName, link, planData.key, parseFloat(planData.price), planData.label, parseFloat(planData.origPrice || planData.price));
+        };
+
+        window.applyCouponUI = async () => {
+            let code = document.getElementById('chk-coupon-input').value.trim().toUpperCase();
+            if(!code) return showToast('Please enter a coupon code', 'warning');
+
+            const btn = document.getElementById('btn-apply-coupon');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; btn.disabled = true;
+
+            try {
+                const snap = await get(ref(db, `coupons`));
+                let couponObj = null;
+                if (snap.exists()) {
+                    const data = snap.val();
+                    let foundKey = Object.keys(data).find(k => data[k].code === code);
+                    if(foundKey) couponObj = { id: foundKey, ...data[foundKey] };
+                }
+
+                if (!couponObj || couponObj.status !== true) {
+                    showToast("Invalid or Expired Coupon Code", "error");
+                } else if (couponObj.maxUse && couponObj.used >= couponObj.maxUse) {
+                    showToast("Coupon Limit Reached", "error");
+                } else {
+                    let price = window.currentCheckout.finalPrice; 
+                    let discountAmount = (price * couponObj.discount) / 100;
+                    let discountedPrice = Math.max(0, price - discountAmount);
+
+                    window.appliedCoupon = couponObj;
+                    window.currentCheckout.finalPrice = discountedPrice;
+
+                    document.getElementById('chk-final-price').innerText = discountedPrice.toFixed(2);
+                    let strikeEl = document.getElementById('chk-strike-price');
+                    strikeEl.innerText = '₹' + price.toFixed(2);
+                    strikeEl.classList.remove('hidden');
+
+                    let badgeEl = document.getElementById('chk-discount-badge');
+                    badgeEl.innerText = couponObj.discount + '% OFF';
+                    badgeEl.classList.remove('hidden');
+
+                    showToast(`Coupon applied! ${couponObj.discount}% OFF`, "success");
+                }
+            } catch(e) { showToast("Error validating coupon", "error"); } 
+            finally { btn.innerHTML = 'APPLY'; btn.disabled = false; }
+        };
+
+        // --- SMART PURCHASE EXECUTION ---
+        window.executePurchase = async () => {
+            const checkout = window.currentCheckout;
+            const priceToPay = checkout.finalPrice;
+            const btn = document.getElementById('btn-confirm-pay');
+
+            if(userData.balance < priceToPay) return showToast(`Insufficient balance. Need ₹${priceToPay.toFixed(2)}`, "error");
+
+            showLoader();
+            btn.disabled = true; btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing...`;
+
+            try {
+                const balRef = ref(db, `users/${currentUser.uid}/balance`);
+                const balResult = await runTransaction(balRef, (currentBalance) => {
+                    if (currentBalance === null) return 0;
+                    if (currentBalance >= priceToPay) return currentBalance - priceToPay; 
+                    return undefined;
+                });
+
+                if (!balResult.committed) {
+                    showToast("Transaction failed. Insufficient funds.", "error");
+                    hideLoader(); btn.disabled = false; btn.innerHTML = `CONFIRM PAY`;
+                    return;
+                }
+
+                const planStockRef = ref(db, `keyStocks/${checkout.panelId}/${checkout.planKey}`);
+                const stockSnap = await get(planStockRef);
+                let availableKeyNode = null;
+                let actualKeyString = null;
+                
+                if(stockSnap.exists()) {
+                    const keysData = stockSnap.val();
+                    for(let pushId in keysData) {
+                        if(keysData[pushId].used === false) {
+                            availableKeyNode = pushId;
+                            actualKeyString = keysData[pushId].key;
+                            break;
+                        }
+                    }
+                }
+
+                let isDelivered = false;
+                if (availableKeyNode) {
+                    const keyRef = ref(db, `keyStocks/${checkout.panelId}/${checkout.planKey}/${availableKeyNode}`);
+                    const keyClaimResult = await runTransaction(keyRef, (keyData) => {
+                        if(keyData && keyData.used === false) {
+                            keyData.used = true;
+                            keyData.usedBy = currentUser.uid;
+                            keyData.usedAt = new Date().toISOString();
+                            return keyData;
+                        }
+                        return undefined; 
+                    });
+
+                    if (keyClaimResult.committed) {
+                        isDelivered = true;
+                    }
+                }
+
+                const txId = "PUR" + Date.now();
+                const origPrice = checkout.originalPrice;
+                const profit = origPrice > priceToPay ? (origPrice - priceToPay) : 0;
+                const deliveryStatus = isDelivered ? 'Instant Delivered' : 'Pending From Admin';
+                const finalKeyString = isDelivered ? actualKeyString : "Pending From Admin";
+
+                const purchaseData = {
+                    panelId: checkout.panelId, panelName: checkout.panelName, plan: checkout.planKey, label: checkout.label,
+                    price: priceToPay, origPrice: origPrice, profit: profit, key: finalKeyString, link: checkout.link, date: new Date().toISOString(), status: 'success', deliveryStatus: deliveryStatus
+                };
+
+                await set(ref(db, `purchases/${currentUser.uid}/${txId}`), purchaseData);
+
+                if (!isDelivered) {
+                    await set(ref(db, `pendingOrders/${txId}`), { uid: currentUser.uid, email: currentUser.email, ...purchaseData, timestamp: serverTimestamp() });
+                } else {
+                    await set(ref(db, `deliveredOrders/${txId}`), { uid: currentUser.uid, email: currentUser.email, ...purchaseData, timestamp: serverTimestamp() });
+                }
+
+                await set(ref(db, `transactions/${currentUser.uid}/${txId}`), {
+                    id: txId, type: "purchase", amount: priceToPay, status: "success",
+                    desc: `Purchased ${checkout.panelName}`, date: new Date().toISOString()
+                });
+
+                if (window.appliedCoupon && window.appliedCoupon.id) {
+                    await runTransaction(ref(db, `coupons/${window.appliedCoupon.id}/used`), (curr) => (curr || 0) + 1);
+                }
+                
+                // Add Commission Execution
+                if (userData.parentResellerUid) {
+                    try {
+                        const commissionAmount = priceToPay * 0.10; 
+                        const commRef = ref(db, `commissions/${userData.parentResellerUid}/${txId}`);
+                        await set(commRef, {
+                            amount: commissionAmount,
+                            fromUser: currentUser.uid,
+                            fromEmail: currentUser.email,
+                            plan: checkout.label,
+                            date: new Date().toISOString(),
+                            status: 'credited'
+                        });
+                        
+                        await runTransaction(ref(db, `users/${userData.parentResellerUid}/balance`), (bal) => (bal || 0) + commissionAmount);
+                        
+                        await runTransaction(ref(db, `referrals/${userData.parentResellerUid}/${currentUser.uid}`), (refData) => {
+                            if(refData) {
+                                refData.purchases = (refData.purchases || 0) + 1;
+                                refData.earningsGenerated = (refData.earningsGenerated || 0) + commissionAmount;
+                            } else {
+                                refData = {
+                                    email: currentUser.email,
+                                    joinDate: new Date().toISOString(),
+                                    status: 'active',
+                                    purchases: 1,
+                                    earningsGenerated: commissionAmount
+                                };
+                            }
+                            return refData;
+                        });
+                        
+                        await push(ref(db, `notifications/${userData.parentResellerUid}`), {
+                            title: "New Commission Received!",
+                            message: `You earned ₹${commissionAmount.toFixed(2)} from ${currentUser.email}`,
+                            type: "promo",
+                            date: new Date().toISOString()
+                        });
+                    } catch (err) { console.error("Commission Error:", err); }
+                }
+                
+                closeModal('modal-checkout');
+                
+                document.getElementById('modal-key-display').id = `key-${txId}`; 
+                const modalKeyDisplay = document.getElementById(`key-${txId}`);
+
+                if (isDelivered) {
+                    document.getElementById('modal-key-text-label').innerText = "License Key";
+                    modalKeyDisplay.innerText = actualKeyString;
+                    modalKeyDisplay.style.fontSize = "20px";
+                    modalKeyDisplay.style.color = "var(--success)";
+
+                    document.getElementById('modal-success-action-btns').innerHTML = `
+                        <button class="btn btn-purchase premium-btn" id="modal-btn-access" style="width: 100%;"><i class="fas fa-download"></i> ACCESS TOOL</button>
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button class="btn btn-primary" onclick="copyToClipboard('key-${txId}', 'License Key')" style="flex: 1; height: 45px; font-size:12px; border-radius: 12px;"><i class="fas fa-copy"></i> COPY KEY</button>
+                            <button class="btn btn-outline" onclick="closeModal('modal-success')" style="flex: 1; height: 45px; font-size:12px; border-radius: 12px;">CLOSE</button>
+                        </div>
+                    `;
+                    document.getElementById('modal-btn-access').onclick = () => window.open(checkout.link || "https://t.me/", '_blank');
+                } else {
+                    document.getElementById('modal-key-text-label').innerText = "Order Status";
+                    modalKeyDisplay.innerText = "Your order is received. Contact admin to get your key.";
+                    modalKeyDisplay.style.fontSize = "14px";
+                    modalKeyDisplay.style.color = "var(--warning)";
+
+                    const msg = encodeURIComponent(`Hello Admin, I purchased ${checkout.panelName} but stock was unavailable. Please provide my key. My Order Email: ${currentUser.email}`);
+                    let waLinkRaw = document.getElementById('support-wa-btn').href;
+                    let waLink = waLinkRaw !== '#' ? (waLinkRaw + (waLinkRaw.includes('?') ? '&text=' : '?text=') + msg) : '#';
+                    let tgLink = document.getElementById('support-tg-btn').href;
+
+                    document.getElementById('modal-success-action-btns').innerHTML = `
+                        <div style="display: flex; gap: 10px; flex-direction: column;">
+                            <a href="${waLink}" target="_blank" class="btn premium-btn" style="background: rgba(37, 211, 102, 0.1); border-color: var(--wa-color); color: var(--wa-color); text-decoration: none; height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fab fa-whatsapp" style="font-size: 18px;"></i> Contact Admin (WA)
+                            </a>
+                            <a href="${tgLink}" target="_blank" class="btn premium-btn" style="background: rgba(0, 136, 204, 0.1); border-color: var(--tg-color); color: var(--tg-color); text-decoration: none; height: 50px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fab fa-telegram-plane" style="font-size: 18px;"></i> Contact Admin (TG)
+                            </a>
+                            <button class="btn btn-outline" onclick="closeModal('modal-success')" style="width: 100%; height: 45px; font-size:12px; border-radius: 12px; margin-top: 5px;">CLOSE</button>
+                        </div>
+                    `;
+                }
+
+                openModal('modal-success');
+                fetchPurchases(); 
+
+            } catch (error) { 
+                console.error(error);
+                showToast("System Error. Try again.", "error"); 
+            } 
+            finally { hideLoader(); btn.disabled = false; btn.innerHTML = `CONFIRM PAY`; }
+        };
+
+        // --- HISTORY & TRANSACTIONS ---
+        function fetchPurchases() {
+            showLoader();
+            get(ref(db, `purchases/${currentUser.uid}`)).then((snapshot) => {
+                const container = document.getElementById('history-container');
+                const dashRecent = document.getElementById('dash-recent-purchases');
+                const phistoryBody = document.getElementById('phistory-tbody');
+                
+                container.innerHTML = '';
+                dashRecent.innerHTML = '';
+                phistoryBody.innerHTML = '';
+                let totalResellerProfit = 0;
+
+                if (!snapshot.exists()) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-key"></i><p>No keys purchased yet.</p></div>`;
+                    dashRecent.innerHTML = `<tr><td colspan="4" style="text-align:center;">No recent purchases</td></tr>`;
+                    phistoryBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No purchase history</td></tr>`;
+                    document.getElementById('prof-profit').innerText = "0.00";
+                    document.getElementById('dash-stat-keys').innerText = "0";
+                } else {
+                    let items = [];
+                    snapshot.forEach(child => {
+                        let val = child.val();
+                        if(val.status !== 'refunded') { 
+                            items.push({ id: child.key, ...val });
+                            if(val.profit && !isNaN(val.profit)) totalResellerProfit += parseFloat(val.profit);
+                        }
+                    });
+                    items.sort((a,b) => new Date(b.date) - new Date(a.date));
+                    
+                    document.getElementById('prof-purchases').innerText = items.length;
+                    document.getElementById('dash-stat-keys').innerText = items.length;
+                    document.getElementById('prof-profit').innerText = totalResellerProfit.toFixed(2);
+
+                    if(items.length === 0) {
+                        container.innerHTML = `<div class="empty-state"><i class="fas fa-key"></i><p>No keys purchased yet.</p></div>`;
+                        dashRecent.innerHTML = `<tr><td colspan="4" style="text-align:center;">No recent purchases</td></tr>`;
+                        phistoryBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">No purchase history</td></tr>`;
+                    } else {
+                        // Render Dashboard Recent Purchases
+                        items.slice(0, 5).forEach(p => {
+                            const dateStr = new Date(p.date).toLocaleDateString();
+                            const isDelivered = p.deliveryStatus === 'Instant Delivered' || (p.key !== "Pending From Admin" && !p.deliveryStatus);
+                            const statusHtml = isDelivered 
+                                ? `<span style="color:var(--success); font-size:12px;"><i class="fas fa-check"></i> Delivered</span>`
+                                : `<span style="color:var(--warning); font-size:12px;"><i class="fas fa-clock"></i> Pending</span>`;
+                            
+                            dashRecent.innerHTML += `
+                                <tr>
+                                    <td>${dateStr}</td>
+                                    <td>${p.panelName}</td>
+                                    <td style="color:var(--neon-cyan);">₹${p.price.toFixed(2)}</td>
+                                    <td>${statusHtml}</td>
+                                </tr>
+                            `;
+                        });
+
+                        // Render History Page Panel Cards & Purchase History Table
+                        items.forEach(p => {
+                            const dateStr = new Date(p.date).toLocaleString();
+                            const displayLabel = p.label || (p.days ? `${p.days} Days` : 'Premium Access');
+
+                            const isDelivered = p.deliveryStatus === 'Instant Delivered' || (p.key !== "Pending From Admin" && !p.deliveryStatus);
+                            
+                            const deliveryBadgeHtml = isDelivered
+                                ? `<span style="background: rgba(0,255,102,0.1); color: var(--success); padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; border: 1px solid rgba(0,255,102,0.2);"><i class="fas fa-check"></i> Instant Delivered</span>`
+                                : `<span style="background: rgba(255,184,0,0.1); color: var(--warning); padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; border: 1px solid rgba(255,184,0,0.2);"><i class="fas fa-clock"></i> Pending From Admin</span>`;
+
+                            const statusHtml = isDelivered 
+                                ? `<span style="color:var(--success); font-size:12px;"><i class="fas fa-check"></i> Delivered</span>`
+                                : `<span style="color:var(--warning); font-size:12px;"><i class="fas fa-clock"></i> Pending</span>`;
+
+                            // Populating Purchase History page table
+                            phistoryBody.innerHTML += `
+                                <tr class="phistory-row" data-search="${p.panelName.toLowerCase()} ${displayLabel.toLowerCase()}">
+                                    <td>${new Date(p.date).toLocaleDateString()}</td>
+                                    <td>${p.panelName}</td>
+                                    <td>${displayLabel}</td>
+                                    <td style="color:var(--neon-cyan); font-weight:bold;">₹${p.price.toFixed(2)}</td>
+                                    <td>${statusHtml}</td>
+                                </tr>
+                            `;
+
+                            const msg = encodeURIComponent(`Hello Admin, I purchased ${p.panelName} but stock was unavailable. Please provide my key. My Order Email: ${currentUser.email}`);
+                            let waLinkRaw = document.getElementById('support-wa-btn').href;
+                            let waLink = waLinkRaw !== '#' ? (waLinkRaw + (waLinkRaw.includes('?') ? '&text=' : '?text=') + msg) : '#';
+                            let tgLink = document.getElementById('support-tg-btn').href;
+
+                            const keyBoxHtml = isDelivered
+                                ? `<div class="key-box">
+                                       <span class="key-text" id="hist-key-${p.id}">${p.key}</span>
+                                       <button class="btn btn-primary" style="padding: 0 15px; height: 40px; width: auto; font-size:12px; border-radius: 8px;" onclick="copyToClipboard('hist-key-${p.id}', 'License Key')"><i class="fas fa-copy"></i> COPY</button>
+                                   </div>
+                                   <button class="btn-outline premium-btn" style="width: 100%; border-color: var(--neon-cyan); color: var(--neon-cyan); height: 50px;" onclick="window.open('${p.link}', '_blank')">
+                                       <i class="fas fa-download"></i> ACCESS FILES
+                                   </button>`
+                                : `<div class="key-box" style="flex-direction: column; align-items: stretch; border-color: rgba(255,184,0,0.3);">
+                                       <span style="font-size: 13px; color: var(--warning); text-align: center; margin-bottom: 10px; font-weight: 600;">Your order is received. Contact admin to get your key.</span>
+                                       <div style="display: flex; gap: 10px;">
+                                           <a href="${waLink}" target="_blank" class="btn btn-outline" style="flex:1; border-color: var(--wa-color); color: var(--wa-color); height: 40px; text-decoration: none;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                                           <a href="${tgLink}" target="_blank" class="btn btn-outline" style="flex:1; border-color: var(--tg-color); color: var(--tg-color); height: 40px; text-decoration: none;"><i class="fab fa-telegram-plane"></i> Telegram</a>
+                                       </div>
+                                   </div>`;
+
+                            const card = document.createElement('div');
+                            card.className = 'history-card';
+                            card.innerHTML = `
+                                <div class="hist-header">
+                                    <div class="hist-details">
+                                        <h4>${p.panelName}</h4>
+                                        <p><i class="fas fa-tag"></i> ${displayLabel} | ${dateStr}</p>
+                                        <div style="margin-top: 8px;">${deliveryBadgeHtml}</div>
+                                    </div>
+                                    <div class="hist-price">₹${p.price.toFixed(2)}</div>
+                                </div>
+                                ${keyBoxHtml}
+                            `;
+                            container.appendChild(card);
+                        });
+                    }
+                }
+                hideLoader();
+            }).catch(() => { hideLoader(); showToast("Failed to load history", "error"); });
+        }
+</script>
+</body>
+</html>
