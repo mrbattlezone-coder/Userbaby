@@ -199,9 +199,10 @@
     </style>
 
     <script>
-        // Load initial theme from localStorage safely to prevent FOUC. Real-time Firebase will securely override.
+        // Priority: User Override > App Theme Default > Fallback
         (function() {
-            const savedTheme = localStorage.getItem("app_theme") || "theme-neon";
+            const userOverride = localStorage.getItem("user_override_theme");
+            const savedTheme = userOverride || localStorage.getItem("app_theme") || "theme-neon";
             document.body.className = savedTheme;
         })();
     </script>
@@ -240,30 +241,27 @@
     <main class="main-content">
         <!-- LOGIN / SIGNUP -->
         <section id="login-section" class="section active">
-            <div class="text-center mb-4 pt-4 floating-element">
+            <!-- Cleaned up Login Header Area -->
+            <div class="text-center mb-4 pt-4">
                 <img src="https://via.placeholder.com/100/18181b/06b6d4?text=LOGO" class="app-logo-img" style="width: 80px; height: 80px; object-fit: cover; border-radius: 16px; margin-bottom: 16px; box-shadow: var(--glow-shadow);">
                 <h2 class="fw-bold m-0 text-gradient"><span data-i18n="welcome_to">Welcome to</span> <span class="app-name-text">MrBattleZone</span></h2>
-                <p class="text-muted small fw-bold mt-1" data-i18n="play_compete_win">Play. Compete. Win Cash.</p>
             </div>
             
-            <div class="glass-card">
-                <form id="emailLoginForm">
-                    <div class="mb-3"><label class="form-label" data-i18n="email_addr">Email Address</label><input type="email" class="form-control" id="loginEmailInputEl" placeholder="player@email.com" required></div>
-                    <div class="mb-3"><label class="form-label" data-i18n="password">Password</label><input type="password" class="form-control" id="loginPasswordInputEl" placeholder="••••••••" required></div>
-                    <button type="button" class="btn-custom btn-primary-gradient mt-2 mb-3" id="loginEmailBtnEl" data-i18n="secure_login">Secure Login</button>
-                    <hr class="my-3" style="border-color: var(--border-glass);">
-                    <button type="button" class="btn-custom btn-outline-custom" id="showSignupToggleBtnEl" data-i18n="create_account">Create New Account</button>
-                </form>
+            <form id="emailLoginForm">
+                <div class="mb-3"><label class="form-label" data-i18n="email_addr">Email Address</label><input type="email" class="form-control" id="loginEmailInputEl" placeholder="player@email.com" required></div>
+                <div class="mb-3"><label class="form-label" data-i18n="password">Password</label><input type="password" class="form-control" id="loginPasswordInputEl" placeholder="••••••••" required></div>
+                <button type="button" class="btn-custom btn-primary-gradient mt-2 mb-3" id="loginEmailBtnEl" data-i18n="secure_login">Secure Login</button>
+                <button type="button" class="btn-custom btn-outline-custom" id="showSignupToggleBtnEl" data-i18n="create_account">Create New Account</button>
+            </form>
 
-                <form id="emailSignupForm" style="display: none;">
-                    <div class="mb-3"><label class="form-label" data-i18n="in_game_name">In-Game Name</label><input type="text" class="form-control" id="signupNameInputEl" placeholder="Your Game Name" required></div>
-                    <div class="mb-3"><label class="form-label" data-i18n="email_addr">Email Address</label><input type="email" class="form-control" id="signupEmailInputEl" placeholder="Your Email Id" required></div>
-                    <div class="mb-3"><label class="form-label" data-i18n="password">Password</label><input type="password" class="form-control" id="signupPasswordInputEl" placeholder="Min 6 characters" required minlength="6"></div>
-                    <div class="mb-3"><label class="form-label" data-i18n="invite_code_opt">Invite Code (Optional)</label><input type="text" class="form-control" id="signupReferralCodeInputEl" placeholder="Ex: AXPY"></div>
-                    <button type="button" class="btn-custom btn-primary-gradient mt-2 mb-3" id="signupEmailBtnEl" data-i18n="register_acc">Register Account</button>
-                    <button type="button" class="btn-custom btn-outline-custom" id="showLoginToggleBtnEl" data-i18n="back_login">Back to Login</button>
-                </form>
-            </div>
+            <form id="emailSignupForm" style="display: none;">
+                <div class="mb-3"><label class="form-label" data-i18n="in_game_name">In-Game Name</label><input type="text" class="form-control" id="signupNameInputEl" placeholder="Your Game Name" required></div>
+                <div class="mb-3"><label class="form-label" data-i18n="email_addr">Email Address</label><input type="email" class="form-control" id="signupEmailInputEl" placeholder="Your Email Id" required></div>
+                <div class="mb-3"><label class="form-label" data-i18n="password">Password</label><input type="password" class="form-control" id="signupPasswordInputEl" placeholder="Min 6 characters" required minlength="6"></div>
+                <div class="mb-3"><label class="form-label" data-i18n="invite_code_opt">Invite Code (Optional)</label><input type="text" class="form-control" id="signupReferralCodeInputEl" placeholder="Ex: AXPY"></div>
+                <button type="button" class="btn-custom btn-primary-gradient mt-2 mb-3" id="signupEmailBtnEl" data-i18n="register_acc">Register Account</button>
+                <button type="button" class="btn-custom btn-outline-custom" id="showLoginToggleBtnEl" data-i18n="back_login">Back to Login</button>
+            </form>
         </section>
 
         <!-- HOME -->
@@ -324,9 +322,8 @@
                 <div class="particles-bg"></div>
                 <p class="text-main small fw-bold mb-3 text-uppercase position-relative z-1" style="letter-spacing: 1px;">Share Your Invite Link</p>
                 <div class="p-3 rounded fw-bold fs-6 mb-4 text-truncate position-relative z-1" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); color: var(--text-muted);" id="myReferralLinkEl">Generating...</div>
-                <div class="d-flex gap-3 position-relative z-1">
-                    <button class="btn-custom btn-outline-custom flex-fill copy-btn btn-hover-glow" data-target="#myReferralLinkEl"><i class="bi bi-link-45deg fs-4"></i> Copy</button>
-                    <button class="btn-custom btn-primary-gradient flex-fill btn-hover-glow" id="shareReferralLinkBtn"><i class="bi bi-share-fill"></i> Share</button>
+                <div class="position-relative z-1">
+                    <button class="btn-custom btn-outline-custom w-100 copy-btn btn-hover-glow" data-target="#myReferralLinkEl"><i class="bi bi-link-45deg fs-4"></i> Copy</button>
                 </div>
             </div>
         </section>
@@ -356,7 +353,12 @@
             </div>
 
             <div class="glass-card" id="themeSelectionContainer">
-                <h6 class="text-muted text-uppercase fw-bold mb-3 small" data-i18n="select_theme">Select Premium Theme</h6>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-muted text-uppercase fw-bold m-0 small" data-i18n="select_theme">Select Premium Theme</h6>
+                    <button class="btn btn-sm btn-outline-custom" id="useAdminThemeBtn" style="font-size: 0.75rem; padding: 4px 10px; border-radius: 8px;">
+                        <i class="bi bi-arrow-clockwise text-info"></i> <span data-i18n="use_admin_theme">Use Admin Theme</span>
+                    </button>
+                </div>
                 <div class="theme-grid">
                     <div class="theme-card-select" data-theme="theme-neon"><div class="theme-indicator" style="background: #000; border-color: #39ff14;"><i class="bi bi-lightning-charge-fill" style="color: #39ff14;"></i></div><strong class="d-block small">Neon Green</strong></div>
                     <div class="theme-card-select" data-theme="theme-cyber"><div class="theme-indicator" style="background: #0b1120; border-color: #0ea5e9;"><i class="bi bi-cpu-fill" style="color: #0ea5e9;"></i></div><strong class="d-block small">Cyber Blue</strong></div>
@@ -586,14 +588,14 @@
         import { getAuth, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, updatePassword } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
         const firebaseConfig = {
-  apiKey: "AIzaSyCBe52CjDhWzIxjep28m_N9blwMUW-317k",
-  authDomain: "macro-15894.firebaseapp.com",
-  databaseURL: "https://macro-15894-default-rtdb.firebaseio.com",
-  projectId: "macro-15894",
-  storageBucket: "macro-15894.firebasestorage.app",
-  messagingSenderId: "971247181833",
-  appId: "1:971247181833:web:7e752bbbc94dd5ec49d8d8",
-  measurementId: "G-NYEP1GW8RR"
+            apiKey: "AIzaSyCBe52CjDhWzIxjep28m_N9blwMUW-317k",
+            authDomain: "macro-15894.firebaseapp.com",
+            databaseURL: "https://macro-15894-default-rtdb.firebaseio.com",
+            projectId: "macro-15894",
+            storageBucket: "macro-15894.firebasestorage.app",
+            messagingSenderId: "971247181833",
+            appId: "1:971247181833:web:7e752bbbc94dd5ec49d8d8",
+            measurementId: "G-NYEP1GW8RR"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -610,8 +612,9 @@
         // Real-time Trackers
         let activeTournamentsListener = null;
         let activeMyContestsListener = null;
+        let activeDetailsListener = null;
         let globalThemeLock = false;
-        let lastAdminTheme = null;
+        let currentAdminTheme = 'theme-neon';
 
         // ================= GLOBAL CURRENCY SYSTEM (Enhanced w/ Custom Icon) =================
         window.FMT_C = (v) => {
@@ -635,8 +638,8 @@
 
         // ================= TRANSLATION SYSTEM =================
         const translations = {
-            en: { home: "Home", wallet: "Wallet", rank: "Rank", stats: "Stats", profile: "Profile", matches: "Matches", support: "Support", welcome_to: "Welcome to", play_compete_win: "Play. Compete. Win Cash.", email_addr: "Email Address", password: "Password", secure_login: "Secure Login", create_account: "Create New Account", in_game_name: "In-Game Name", invite_code_opt: "Invite Code (Optional)", register_acc: "Register Account", back_login: "Back to Login", top_games: "Top Games", my_contests: "My Contests", no_joined_matches: "No upcoming matches joined.", upcoming: "Upcoming", ongoing: "Ongoing", results: "Results", no_matches_sched: "No matches scheduled.", total_balance: "Total Balance", deposit: "Deposit", withdraw: "Withdraw", winnings: "Winnings", bonus: "Bonus", redeem_code: "Redeem Code", apply: "Apply", txn_history: "History", add_funds: "Add Funds", next_step: "Next Step", select_pay_mode: "Select Payment Mode", proceed_pay: "Proceed to Pay", manual_pay: "Manual Payment", verify_transfer: "Verify Transfer", earned: "Earned", wins: "Wins", apply_coupon: "Apply Promo Coupon", match_history: "Match History", app_tutorial: "App Tutorials", refer_earn: "Refer & Earn", settings: "Settings", help_support: "Help & Support", rules_policies: "Rules & Policies", logout: "Secure Logout", no_tutorials: "No tutorials available.", language: "Language", select_theme: "Select Premium Theme", hall_fame: "Hall of Fame", match_earn: "Match Earnings", refer_reward: "Referral Rewards", loading: "Loading...", select_mode: "Select Mode" },
-            hi: { home: "होम", wallet: "वॉलेट", rank: "रैंक", stats: "आंकड़े", profile: "प्रोफ़ाइल", matches: "मैच", support: "सहायता", welcome_to: "स्वागत है", play_compete_win: "खेलें। मुकाबला करें। जीतें।", email_addr: "ईमेल पता", password: "पासवर्ड", secure_login: "लॉगिन करें", create_account: "नया खाता बनाएँ", in_game_name: "गेम का नाम", invite_code_opt: "इनवाइट कोड (वैकल्पिक)", register_acc: "खाता बनाएँ", back_login: "लॉगिन पर वापस", top_games: "शीर्ष खेल", my_contests: "मेरे मैच", no_joined_matches: "कोई मैच नहीं जोड़ा गया।", upcoming: "आगामी", ongoing: "चल रहे", results: "परिणाम", no_matches_sched: "कोई मैच निर्धारित नहीं है।", total_balance: "कुल राशि", deposit: "जमा करें", withdraw: "निकासी", winnings: "जीती राशि", bonus: "बोनस", redeem_code: "रिडीम कोड", apply: "लागू करें", txn_history: "इतिहास", add_funds: "पैसे जोड़ें", next_step: "अगला कदम", select_pay_mode: "भुगतान का तरीका", proceed_pay: "भुगतान करें", manual_pay: "मैनुअल भुगतान", verify_transfer: "ट्रांसफर सत्यापित करें", earned: "कमाई", wins: "जीत", apply_coupon: "कूपन लगायें", match_history: "मैच का इतिहास", app_tutorial: "ऐप ट्यूटोरियल", refer_earn: "रेफर और कमाएं", settings: "सेटिंग्स", help_support: "सहायता", rules_policies: "नियम और नीतियां", logout: "लॉगआउट", no_tutorials: "कोई ट्यूटोरियल उपलब्ध नहीं।", language: "भाषा", select_theme: "प्रीमियम थीम चुनें", hall_fame: "हॉल ऑफ फेम", match_earn: "मैच की कमाई", refer_reward: "रेफरल इनाम", loading: "लोड हो रहा है...", select_mode: "मोड चुनें" }
+            en: { home: "Home", wallet: "Wallet", rank: "Rank", stats: "Stats", profile: "Profile", matches: "Matches", support: "Support", welcome_to: "Welcome to", play_compete_win: "Play. Compete. Win Cash.", email_addr: "Email Address", password: "Password", secure_login: "Secure Login", create_account: "Create New Account", in_game_name: "In-Game Name", invite_code_opt: "Invite Code (Optional)", register_acc: "Register Account", back_login: "Back to Login", top_games: "Top Games", my_contests: "My Contests", no_joined_matches: "No upcoming matches joined.", upcoming: "Upcoming", ongoing: "Ongoing", results: "Results", no_matches_sched: "No matches scheduled.", total_balance: "Total Balance", deposit: "Deposit", withdraw: "Withdraw", winnings: "Winnings", bonus: "Bonus", redeem_code: "Redeem Code", apply: "Apply", txn_history: "History", add_funds: "Add Funds", next_step: "Next Step", select_pay_mode: "Select Payment Mode", proceed_pay: "Proceed to Pay", manual_pay: "Manual Payment", verify_transfer: "Verify Transfer", earned: "Earned", wins: "Wins", apply_coupon: "Apply Promo Coupon", match_history: "Match History", app_tutorial: "App Tutorials", refer_earn: "Refer & Earn", settings: "Settings", help_support: "Help & Support", rules_policies: "Rules & Policies", logout: "Secure Logout", no_tutorials: "No tutorials available.", language: "Language", select_theme: "Select Premium Theme", use_admin_theme: "Use Admin Theme", hall_fame: "Hall of Fame", match_earn: "Match Earnings", refer_reward: "Referral Rewards", loading: "Loading...", select_mode: "Select Mode" },
+            hi: { home: "होम", wallet: "वॉलेट", rank: "रैंक", stats: "आंकड़े", profile: "प्रोफ़ाइल", matches: "मैच", support: "सहायता", welcome_to: "स्वागत है", play_compete_win: "खेलें। मुकाबला करें। जीतें।", email_addr: "ईमेल पता", password: "पासवर्ड", secure_login: "लॉगिन करें", create_account: "नया खाता बनाएँ", in_game_name: "गेम का नाम", invite_code_opt: "इनवाइट कोड (वैकल्पिक)", register_acc: "खाता बनाएँ", back_login: "लॉगिन पर वापस", top_games: "शीर्ष खेल", my_contests: "मेरे मैच", no_joined_matches: "कोई मैच नहीं जोड़ा गया।", upcoming: "आगामी", ongoing: "चल रहे", results: "परिणाम", no_matches_sched: "कोई मैच निर्धारित नहीं है।", total_balance: "कुल राशि", deposit: "जमा करें", withdraw: "निकासी", winnings: "जीती राशि", bonus: "बोनस", redeem_code: "रिडीम कोड", apply: "लागू करें", txn_history: "इतिहास", add_funds: "पैसे जोड़ें", next_step: "अगला कदम", select_pay_mode: "भुगतान का तरीका", proceed_pay: "भुगतान करें", manual_pay: "मैनुअल भुगतान", verify_transfer: "ट्रांसफर सत्यापित करें", earned: "कमाई", wins: "जीत", apply_coupon: "कूपन लगायें", match_history: "मैच का इतिहास", app_tutorial: "ऐप ट्यूटोरियल", refer_earn: "रेफर और कमाएं", settings: "सेटिंग्स", help_support: "सहायता", rules_policies: "नियम और नीतियां", logout: "लॉगआउट", no_tutorials: "कोई ट्यूटोरियल उपलब्ध नहीं।", language: "भाषा", select_theme: "प्रीमियम थीम चुनें", use_admin_theme: "एडमिन थीम लागू करें", hall_fame: "हॉल ऑफ फेम", match_earn: "मैच की कमाई", refer_reward: "रेफरल इनाम", loading: "लोड हो रहा है...", select_mode: "मोड चुनें" }
         };
 
         function changeLanguage(lang) {
@@ -688,10 +691,15 @@
             if (isUserAction && globalThemeLock) {
                 return showToast("Admin has locked the theme.", "error");
             }
+            
             document.body.className = themeName;
-            if (isUserAction || !globalThemeLock) {
-                localStorage.setItem("app_theme", themeName);
+            
+            if (isUserAction) {
+                localStorage.setItem("user_override_theme", themeName);
             }
+            
+            // App FOUC Prevention state
+            localStorage.setItem("app_theme", themeName);
             
             // Toggle Classes for Buttons & Indicators
             document.querySelectorAll('.theme-card-select').forEach(card => card.classList.toggle('active', card.dataset.theme === themeName));
@@ -706,22 +714,21 @@
                 if (snap.exists()) {
                     const data = snap.val();
                     globalThemeLock = data.themeLock === true;
-                    const adminTheme = data.currentTheme || 'theme-neon';
+                    currentAdminTheme = data.currentTheme || 'theme-neon';
                     
                     const themeContainer = document.getElementById('themeSelectionContainer');
                     if (themeContainer) themeContainer.style.display = globalThemeLock ? 'none' : 'block';
 
+                    const userOverride = localStorage.getItem("user_override_theme");
+
+                    // Priority Logic: Lock > UserOverride > AdminDefault
                     if (globalThemeLock) {
-                        applyTheme(adminTheme, false);
+                        applyTheme(currentAdminTheme, false);
+                    } else if (userOverride) {
+                        applyTheme(userOverride, false);
                     } else {
-                        if (adminTheme !== lastAdminTheme && lastAdminTheme !== null) {
-                            applyTheme(adminTheme, false);
-                        } else if (lastAdminTheme === null) {
-                            const local = localStorage.getItem("app_theme");
-                            applyTheme(local || adminTheme, false);
-                        }
+                        applyTheme(currentAdminTheme, false);
                     }
-                    lastAdminTheme = adminTheme;
 
                     // Advanced Custom App Colors
                     if (data.customColors) {
@@ -731,9 +738,10 @@
                     }
                 } else {
                     globalThemeLock = false;
+                    currentAdminTheme = 'theme-neon';
                     resetCustomColors();
-                    const local = localStorage.getItem("app_theme");
-                    applyTheme(local || 'theme-neon', false);
+                    const userOverride = localStorage.getItem("user_override_theme");
+                    applyTheme(userOverride || currentAdminTheme, false);
                     const themeContainer = document.getElementById('themeSelectionContainer');
                     if (themeContainer) themeContainer.style.display = 'block';
                 }
@@ -839,6 +847,14 @@
                 orderStatus: new bootstrap.Modal(document.getElementById('orderStatusModalEl')),
                 prizeList: new bootstrap.Modal(document.getElementById('prizeListModalEl'))
             };
+
+            // Clean up Match Detail Listener on Modal Close
+            document.getElementById('matchDetailsModalEl').addEventListener('hidden.bs.modal', () => {
+                if (activeDetailsListener) {
+                    off(activeDetailsListener.ref, 'value', activeDetailsListener.callback);
+                    activeDetailsListener = null;
+                }
+            });
             
             changeLanguage(localStorage.getItem("app_lang") || "en");
             
@@ -847,6 +863,16 @@
             document.querySelectorAll('.theme-mode-btn').forEach(btn => btn.addEventListener('click', () => applyTheme(btn.dataset.theme, true)));
             
             document.querySelectorAll('.lang-toggle-btn').forEach(btn => btn.addEventListener('click', () => changeLanguage(btn.dataset.lang)));
+
+            // Use Admin Theme Button Implementation
+            const useAdminThemeBtn = document.getElementById('useAdminThemeBtn');
+            if (useAdminThemeBtn) {
+                useAdminThemeBtn.addEventListener('click', () => {
+                    localStorage.removeItem("user_override_theme");
+                    applyTheme(currentAdminTheme, false);
+                    showToast("Reset to Admin Theme successfully!", "success");
+                });
+            }
 
             ZapUPI.setPaymentCallbacks({
                 onSuccess: function(orderId) { verifyAndCreditZapUPI(orderId); },
@@ -900,11 +926,13 @@
         const formatDate = (ts) => ts ? new Date(ts).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour:'numeric', minute:'2-digit', hour12:true }) : 'N/A';
         function getTimeRemaining(startTime) { const diff = startTime - Date.now(); if (diff <= 0) return 'Live Now'; const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000); return `${d>0?d+'d ':''}${h>0||d>0?h+'h ':''}${m}m`; }
 
-        function fallbackCopyTextToClipboard(text) {
-            try { navigator.clipboard.writeText(text).then(() => showToast('Copied Successfully!', 'success')); } 
+        // Customized Fallback Copy with Message Support
+        function fallbackCopyTextToClipboard(text, customMsg) {
+            const successMsg = customMsg || 'Copied Successfully!';
+            try { navigator.clipboard.writeText(text).then(() => showToast(successMsg, 'success')); } 
             catch(err) {
                 let ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; document.body.appendChild(ta); ta.focus(); ta.select();
-                try { document.execCommand('copy'); showToast('Copied Successfully!', 'success'); } catch(e) { showToast('Failed to copy', 'error'); }
+                try { document.execCommand('copy'); showToast(successMsg, 'success'); } catch(e) { showToast('Failed to copy', 'error'); }
                 document.body.removeChild(ta);
             }
         }
@@ -917,6 +945,17 @@
             document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
             target.classList.add('active');
             currentSectionId = sectionId;
+
+            // Visibility fixes for App Header and Bottom Navigation on Login page
+            const appHeader = document.querySelector('.app-header');
+            const bottomNav = document.querySelector('.bottom-nav');
+            if (sectionId === 'login-section') {
+                if(appHeader) appHeader.style.display = 'none';
+                if(bottomNav) bottomNav.style.display = 'none';
+            } else {
+                if(appHeader) appHeader.style.display = 'flex';
+                if(bottomNav) bottomNav.style.display = 'flex';
+            }
             
             document.querySelectorAll('.bottom-nav .nav-item').forEach(item => item.classList.toggle('active', item.dataset.section === sectionId));
             
@@ -974,7 +1013,8 @@
 
                 let text = copyBtn.dataset.text || document.querySelector(copyBtn.dataset.target)?.textContent.trim();
                 if(text && !text.includes("Generating") && !text.includes("Disabled") && text !== "----" && text !== "DISABLED") {
-                    fallbackCopyTextToClipboard(text);
+                    let msg = copyBtn.dataset.target === '#myReferralLinkEl' ? 'Referral Link Copied Successfully' : 'Copied Successfully!';
+                    fallbackCopyTextToClipboard(text, msg);
                     const icon = copyBtn.querySelector('i');
                     if (icon) {
                         const originalClass = icon.className;
@@ -1021,7 +1061,6 @@
             } else { 
                 getEl('notificationBtnEl').style.display = 'none';
                 getEl('headerWalletChipEl').style.display='none'; 
-                document.querySelectorAll('.bottom-nav .nav-item').forEach(i=>i.style.display='none');
                 showSection('login-section'); 
             }
             showLoader(false);
@@ -1173,18 +1212,15 @@
 
             const refLinkEl = document.getElementById('myReferralLinkEl');
             const bonusTextEl = document.getElementById('referralBonusText');
-            const shareBtn = document.getElementById('shareReferralLinkBtn');
             const copyBtns = document.querySelectorAll('#referral-section .copy-btn');
 
             if (appSettings.referralEnabled === false) {
                 if(refLinkEl) refLinkEl.textContent = "Referral System Disabled";
                 if(bonusTextEl) bonusTextEl.textContent = window.FMT_C(0);
-                if(shareBtn) shareBtn.classList.add('disabled', 'opacity-50');
                 copyBtns.forEach(btn => btn.classList.add('disabled', 'opacity-50'));
                 return;
             }
 
-            if(shareBtn) shareBtn.classList.remove('disabled', 'opacity-50');
             copyBtns.forEach(btn => btn.classList.remove('disabled', 'opacity-50'));
             if(bonusTextEl) bonusTextEl.innerHTML = window.FMT_C(appSettings.referralBonus || 0);
             
@@ -1214,25 +1250,6 @@
                 if (invEl) invEl.textContent = totalInvited;
                 if (earnEl) earnEl.innerHTML = window.FMT_C(totalEarned);
             } catch(e) {}
-        }
-
-        const refShareBtn = document.getElementById('shareReferralLinkBtn');
-        if (refShareBtn) {
-            refShareBtn.onclick = async () => {
-                if(appSettings.referralEnabled === false) return showToast("Referral system is disabled", "error");
-                
-                const linkEl = document.getElementById('myReferralLinkEl');
-                const link = linkEl ? linkEl.textContent : '';
-                if(!link || link.includes("Generating") || link.includes("Disabled") || link === "----") return showToast("Wait for link generation", "error");
-
-                const title = appSettings.appName || 'Join Me!';
-                const text = `Use my invite link to get a sign-up bonus of ₹${appSettings.referralBonus || 0} on ${appSettings.appName || 'this platform'}!`;
-
-                if (navigator.share) {
-                    try { await navigator.share({ title: title, text: text, url: link }); } 
-                    catch (err) { if (err.name !== 'AbortError') fallbackCopyTextToClipboard(link); }
-                } else fallbackCopyTextToClipboard(link);
-            };
         }
 
         // ================= PROMO / REDEEM =================
@@ -1425,10 +1442,25 @@
                 watchLiveBtn = `<button class="btn-custom btn-primary-gradient flex-fill btn-watch-live w-100 mb-2" data-url="${t.liveStreamUrl}" style="background: linear-gradient(135deg, #ef4444, #991b1b); border:1px solid #ef4444; color:white;"><i class="bi bi-youtube fs-5"></i> ${t.liveStreamTitle || 'Watch Live'}</button>`;
             }
 
-            if (t.status === 'completed' || t.status === 'result') { btn = `<button class="btn-custom btn-outline-custom" disabled>Completed</button>`; ipBtn = `<button class="btn-custom btn-primary-gradient mt-2 w-100 btn-results" data-id="${id}">View Results</button>`; }
-            else if(isJ) { btn = `<button class="btn-custom" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981;" disabled>Joined</button>`; if(['ongoing','upcoming'].includes(t.status)) ipBtn = `<button class="btn-custom btn-primary-gradient mt-2 w-100 btn-idpass" data-id="${id}">Room ID & Pass</button>`; }
-            else if(t.status === 'upcoming' && (maxP===0 || maxP-regC>0)) btn = `<button class="btn-custom btn-primary-gradient btn-join btn-hover-glow" data-id="${id}">${window.FMT_C(eFee)} Join</button>`;
-            else btn = `<button class="btn-custom btn-outline-custom" disabled>Closed</button>`;
+            // Dynamic Join Button & UI Checks
+            if (t.status === 'completed' || t.status === 'result') { 
+                btn = `<button class="btn-custom btn-outline-custom" disabled>Completed</button>`; 
+                ipBtn = `<button class="btn-custom btn-primary-gradient mt-2 w-100 btn-results" data-id="${id}">View Results</button>`; 
+            }
+            else if(isJ) { 
+                btn = `<button class="btn-custom" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981;" disabled>Joined</button>`; 
+                if(['ongoing','upcoming'].includes(t.status)) ipBtn = `<button class="btn-custom btn-primary-gradient mt-2 w-100 btn-idpass" data-id="${id}">Room ID & Pass</button>`; 
+            }
+            else if(t.status === 'upcoming') {
+                if (maxP === 0 || maxP - regC > 0) {
+                    btn = `<button class="btn-custom btn-primary-gradient btn-join btn-hover-glow" data-id="${id}">${window.FMT_C(eFee)} Join</button>`;
+                } else {
+                    btn = `<button class="btn-custom btn-outline-custom text-danger" style="border-color: #ef4444;" disabled>Match Full</button>`;
+                }
+            }
+            else { 
+                btn = `<button class="btn-custom btn-outline-custom" disabled>Closed</button>`; 
+            }
 
             card.innerHTML = `
                 <img src="${t.bannerUrl || 'https://via.placeholder.com/400x200'}" class="tournament-banner-image">
@@ -1571,29 +1603,72 @@
             card.querySelector('.btn-details')?.addEventListener('click', () => { 
                 getEl('matchDetailsModalTitleEl').textContent = t.name;
                 
-                let streamMarkup = '';
-                if (t.liveStreamUrl && t.showLiveButton !== false) {
-                    streamMarkup = `<br><button class="btn btn-danger w-100 fw-bold mt-2 py-2" onclick="window.open('${t.liveStreamUrl}', '_blank')" style="border-radius:12px;"><i class="bi bi-play-circle-fill"></i> ${t.liveStreamTitle || 'Watch Live Match'}</button>`;
+                if (activeDetailsListener) {
+                    off(activeDetailsListener.ref, 'value', activeDetailsListener.callback);
                 }
 
-                // Advanced Prize List UI
-                let prizeMarkup = '';
-                if (t.prizeList) {
-                    prizeMarkup += `<div class="mt-4"><h6 class="fw-bold text-gradient mb-3" style="font-size:1.1rem;">🏆 Prize Distribution</h6><div class="glass-card p-0 overflow-hidden">`;
-                    const sortedRanks = Object.entries(t.prizeList).sort((a,b) => Number(a[0]) - Number(b[0]));
-                    sortedRanks.forEach(([rank, amt]) => {
-                        let badge = `${rank}th Rank`;
-                        if(rank == 1) badge = '🥇 1st Winner';
-                        else if(rank == 2) badge = '🥈 2nd Winner';
-                        else if(rank == 3) badge = '🥉 3rd Winner';
-                        prizeMarkup += `<div class="d-flex justify-content-between align-items-center p-3 border-bottom border-glass last-border-none"><span class="fw-bold text-main">${badge}</span><strong style="color:var(--accent-gold); font-size:1.1rem;" class="glow-text d-flex align-items-center">${window.FMT_C(amt)}</strong></div>`;
+                const mBody = getEl('matchDetailsModalBodyEl');
+                mBody.innerHTML = '<div class="text-center py-4"><div class="spinner-border glow-text" style="color:var(--accent-cyan);"></div></div>';
+                modals.matchDetails.show();
+
+                const tRef = ref(db, `tournaments/${id}`);
+                const callback = onValue(tRef, (snap) => {
+                    if(!snap.exists()) return;
+                    const matchData = snap.val();
+
+                    let streamMarkup = '';
+                    if (matchData.liveStreamUrl && matchData.showLiveButton !== false) {
+                        streamMarkup = `<br><button class="btn btn-danger w-100 fw-bold mt-2 py-2" onclick="window.open('${matchData.liveStreamUrl}', '_blank')" style="border-radius:12px;"><i class="bi bi-play-circle-fill"></i> ${matchData.liveStreamTitle || 'Watch Live Match'}</button>`;
+                    }
+
+                    // Advanced Prize List UI
+                    let prizeMarkup = '';
+                    if (matchData.prizeList) {
+                        prizeMarkup += `<div class="mt-4"><h6 class="fw-bold text-gradient mb-3" style="font-size:1.1rem;">🏆 Prize Distribution</h6><div class="glass-card p-0 overflow-hidden">`;
+                        const sortedRanks = Object.entries(matchData.prizeList).sort((a,b) => Number(a[0]) - Number(b[0]));
+                        sortedRanks.forEach(([rank, amt]) => {
+                            let badge = `${rank}th Rank`;
+                            if(rank == 1) badge = '🥇 1st Winner';
+                            else if(rank == 2) badge = '🥈 2nd Winner';
+                            else if(rank == 3) badge = '🥉 3rd Winner';
+                            prizeMarkup += `<div class="d-flex justify-content-between align-items-center p-3 border-bottom border-glass last-border-none"><span class="fw-bold text-main">${badge}</span><strong style="color:var(--accent-gold); font-size:1.1rem;" class="glow-text d-flex align-items-center">${window.FMT_C(amt)}</strong></div>`;
+                        });
+                        prizeMarkup += `</div></div>`;
+                    }
+
+                    // Real-time Slot & Player Details implementation
+                    const maxSlots = matchData.maxPlayers || 100;
+                    const registered = matchData.registeredPlayers || {};
+                    const joinedCount = Object.keys(registered).length;
+                    const remainingSlots = maxSlots - joinedCount;
+
+                    let slotListHTML = `<div class="mt-4"><h6 class="fw-bold text-gradient mb-3" style="font-size:1.1rem;"><i class="bi bi-people-fill"></i> Players & Slots</h6>`;
+                    slotListHTML += `<div class="d-flex justify-content-between mb-3 text-muted small fw-bold">
+                                        <span>Total: <strong class="text-main">${maxSlots}</strong></span>
+                                        <span>Filled: <strong class="text-main">${joinedCount}</strong></span>
+                                        <span>Remaining: <strong class="text-main">${remainingSlots}</strong></span>
+                                     </div>`;
+                    slotListHTML += `<div class="glass-card p-0 overflow-hidden" style="max-height: 250px; overflow-y: auto;">`;
+
+                    const slotMap = {};
+                    Object.values(registered).forEach(rp => {
+                        if(rp.slot) slotMap[rp.slot] = rp.gameName || 'Player';
                     });
-                    prizeMarkup += `</div></div>`;
-                }
 
-                getEl('matchDetailsModalBodyEl').innerHTML = `<p>${t.description || 'No special rules.'}</p><br><p><strong style="color: var(--text-main);">Mode:</strong> ${t.mode||'Solo'}</p>${prizeMarkup}${streamMarkup}`; 
-                modals.matchDetails.show(); 
+                    for(let s=1; s<=maxSlots; s++) {
+                        const isFilled = slotMap[s];
+                        slotListHTML += `<div class="d-flex justify-content-between align-items-center p-3 border-bottom border-glass last-border-none" style="font-size:0.9rem;">
+                            <span class="fw-bold ${isFilled ? 'text-main' : 'text-muted'}">Slot ${s}</span>
+                            <strong class="${isFilled ? 'text-info' : 'text-success'}">${isFilled ? isFilled : 'Available'}</strong>
+                        </div>`;
+                    }
+                    slotListHTML += `</div></div>`;
+
+                    mBody.innerHTML = `<p>${matchData.description || 'No special rules.'}</p><br><p><strong style="color: var(--text-main);">Mode:</strong> ${matchData.mode||'Solo'}</p>${prizeMarkup}${slotListHTML}${streamMarkup}`;
+                });
+                activeDetailsListener = { ref: tRef, callback };
             });
+
             card.querySelector('.btn-idpass')?.addEventListener('click', () => { getEl('roomIdDisplayEl').textContent = t.roomId || 'Waiting...'; getEl('roomPasswordDisplayEl').textContent = t.roomPassword || 'Waiting...'; modals.idPass.show(); });
             card.querySelector('.btn-results')?.addEventListener('click', () => { 
                 getEl('matchDetailsModalTitleEl').textContent = "Results - " + t.name; 
